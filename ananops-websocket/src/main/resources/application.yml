@@ -1,0 +1,10 @@
+server:
+  port: 7079
+spring:
+  profiles:
+    active: dev
+  application:
+    name: ananops-provider-websocket
+  datasource:
+    username: root
+    password: 123456

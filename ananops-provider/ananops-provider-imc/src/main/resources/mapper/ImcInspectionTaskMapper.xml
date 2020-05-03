@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ananops.provider.mapper.ImcInspectionTaskMapper" >
+  <resultMap id="BaseResultMap" type="com.ananops.provider.model.domain.ImcInspectionTask" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="version" jdbcType="INTEGER" property="version" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
+    <result column="creator_id" jdbcType="BIGINT" property="creatorId" />
+    <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
+    <result column="last_operator" jdbcType="VARCHAR" property="lastOperator" />
+    <result column="last_operator_id" jdbcType="BIGINT" property="lastOperatorId" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="principal_id" jdbcType="BIGINT" property="principalId" />
+    <result column="facilitator_id" jdbcType="BIGINT" property="facilitatorId" />
+    <result column="project_id" jdbcType="BIGINT" property="projectId" />
+    <result column="location" jdbcType="VARCHAR" property="location" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="total_cost" jdbcType="DECIMAL" property="totalCost" />
+    <result column="maintenance_cost" jdbcType="DECIMAL" property="maintenanceCost" />
+    <result column="scheduled_start_time" jdbcType="TIMESTAMP" property="scheduledStartTime" />
+    <result column="actual_finish_time" jdbcType="TIMESTAMP" property="actualFinishTime" />
+    <result column="days" jdbcType="INTEGER" property="days" />
+    <result column="inspection_type" jdbcType="INTEGER" property="inspectionType" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="task_name" jdbcType="VARCHAR" property="taskName" />
+    <result column="frequency" jdbcType="INTEGER" property="frequency" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="point_sum" jdbcType="INTEGER" property="pointSum" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ${alias}.id,${alias}.version,${alias}.creator,${alias}.creator_id,${alias}.created_time,${alias}.last_operator,${alias}.last_operator_id,
+    ${alias}.update_time,${alias}.principal_id,${alias}.facilitator_id,${alias}.project_id,${alias}.location,${alias}.status,${alias}.total_cost,
+    ${alias}.maintenance_cost,${alias}.scheduled_start_time,${alias}.actual_finish_time,${alias}.days,${alias}.inspection_type,${alias}.remark,
+    ${alias}.task_name,${alias}.frequency,${alias}.point_sum
+  </sql>
+<!--  根据甲方用户id查询对应的巡检任务-->
+  <select id="queryTaskByUserId" resultType="com.ananops.provider.model.domain.ImcInspectionTask">
+    SELECT
+    <include refid="Base_Column_List">
+      <property name="alias" value="task"></property>
+    </include>
+    FROM
+    an_imc_inspection_task as task , an_imc_user_task as userTask
+    WHERE 1=1 AND userTask.user_id = #{userId} AND task.id = userTask.task_id
+    ORDER BY update_time DESC
+  </select>
+  <!-- 根据甲方id查询对应的巡检任务-->
+  <select id="countTaskByUserId" resultType="integer">
+    SELECT COUNT(*) FROM an_imc_inspection_task as task , an_imc_user_task as userTask
+    WHERE 1=1 AND userTask.user_id = #{userId} AND task.id = userTask.task_id
+    ORDER BY update_time DESC
+  </select>
+  <!--  根据甲方用户id和任务名模糊查询对应的巡检任务-->
+  <select id="queryTaskByUserIdAndTaskName" resultType="com.ananops.provider.model.domain.ImcInspectionTask">
+    SELECT
+    <include refid="Base_Column_List">
+      <property name="alias" value="task"></property>
+    </include>
+    FROM
+    an_imc_inspection_task as task , an_imc_user_task as userTask
+    WHERE 1=1 AND userTask.user_id = #{userId} AND task.id = userTask.task_id AND task.task_name like #{taskName}
+    ORDER BY update_time DESC
+  </select>
+<!--根据甲方用户id查询指定状态的巡检任务-->
+  <select id="queryTaskByUserIdAndStatus" resultType="com.ananops.provider.model.domain.ImcInspectionTask">
+    SELECT
+    <include refid="Base_Column_List">
+      <property name="alias" value="task"></property>
+    </include>
+    FROM
+    an_imc_inspection_task as task , an_imc_user_task as userTask
+    WHERE 1=1 AND userTask.user_id = #{userId} AND task.id = userTask.task_id AND task.status = #{status}
+    ORDER BY update_time DESC
+  </select>
+  <!--根据甲方用户id和任务名模糊查询指定状态的巡检任务-->
+  <select id="queryTaskByUserIdAndStatusAndTaskName" resultType="com.ananops.provider.model.domain.ImcInspectionTask">
+    SELECT
+    <include refid="Base_Column_List">
+      <property name="alias" value="task"></property>
+    </include>
+    FROM
+    an_imc_inspection_task as task , an_imc_user_task as userTask
+    WHERE 1=1 AND userTask.user_id = #{userId} AND task.id = userTask.task_id AND task.status = #{status} AND task.task_name like #{taskName}
+    ORDER BY update_time DESC
+  </select>
+<!--根据服务商管理员的id查询对应的巡检任务-->
+  <select id="queryTaskByFacilitatorManagerId" resultType="com.ananops.provider.model.domain.ImcInspectionTask">
+    SELECT
+    <include refid="Base_Column_List">
+      <property name="alias" value="task"></property>
+    </include>
+    FROM
+    an_imc_inspection_task as task , an_imc_facilitator_manager_task as facilitatorManagerTask
+    WHERE 1=1 AND facilitatorManagerTask.facilitator_manager_id = #{facilitatorManagerId} AND task.id = facilitatorManagerTask.task_id
+    ORDER BY update_time DESC
+  </select>
+  <!--根据服务商管理员的id和任务名模糊查询对应的巡检任务-->
+  <select id="queryTaskByFacilitatorManagerIdAndTaskName" resultType="com.ananops.provider.model.domain.ImcInspectionTask">
+    SELECT
+    <include refid="Base_Column_List">
+      <property name="alias" value="task"></property>
+    </include>
+    FROM
+    an_imc_inspection_task as task , an_imc_facilitator_manager_task as facilitatorManagerTask
+    WHERE 1=1 AND facilitatorManagerTask.facilitator_manager_id = #{facilitatorManagerId} AND task.id = facilitatorManagerTask.task_id AND task.task_name like #{taskName}
+    ORDER BY update_time DESC
+  </select>
+<!--根据服务商管理员的id查询指定状态的巡检任务-->
+  <select id="queryTaskByFacilitatorManagerIdAndStatus" resultType="com.ananops.provider.model.domain.ImcInspectionTask">
+    SELECT
+    <include refid="Base_Column_List">
+      <property name="alias" value="task"></property>
+    </include>
+    FROM
+    an_imc_inspection_task as task , an_imc_facilitator_manager_task as facilitatorManagerTask
+    WHERE 1=1 AND facilitatorManagerTask.facilitator_manager_id = #{facilitatorManagerId} AND task.id = facilitatorManagerTask.task_id AND task.status = #{status}
+    ORDER BY update_time DESC
+  </select>
+  <!--根据服务商管理员的id和任务名模糊查询指定状态的巡检任务-->
+  <select id="queryTaskByFacilitatorManagerIdAndStatusAndTaskName" resultType="com.ananops.provider.model.domain.ImcInspectionTask">
+    SELECT
+    <include refid="Base_Column_List">
+      <property name="alias" value="task"></property>
+    </include>
+    FROM
+    an_imc_inspection_task as task , an_imc_facilitator_manager_task as facilitatorManagerTask
+    WHERE 1=1 AND facilitatorManagerTask.facilitator_manager_id = #{facilitatorManagerId} AND task.id = facilitatorManagerTask.task_id AND task.status = #{status}
+    AND task.task_name like #{taskName}
+    ORDER BY update_time DESC
+  </select>
+<!--根据服务商组织的id查询对应的巡检任务-->
+  <select id="queryTaskByFacilitatorGroupId" resultType="com.ananops.provider.model.domain.ImcInspectionTask">
+    SELECT
+    <include refid="Base_Column_List">
+      <property name="alias" value="task"></property>
+    </include>
+    FROM
+    an_imc_inspection_task as task , an_imc_facilitator_group_task as facilitatorGroupTask
+    WHERE 1=1 AND facilitatorGroupTask.facilitator_group_id = #{facilitatorGroupId} AND task.id = facilitatorGroupTask.task_id
+    ORDER BY update_time DESC
+  </select>
+  <!--根据服务商组织的id和任务名模糊查询对应的巡检任务-->
+  <select id="queryTaskByFacilitatorGroupIdAndTaskName" resultType="com.ananops.provider.model.domain.ImcInspectionTask">
+    SELECT
+    <include refid="Base_Column_List">
+      <property name="alias" value="task"></property>
+    </include>
+    FROM
+    an_imc_inspection_task as task , an_imc_facilitator_group_task as facilitatorGroupTask
+    WHERE 1=1 AND facilitatorGroupTask.facilitator_group_id = #{facilitatorGroupId} AND task.id = facilitatorGroupTask.task_id AND task.task_name like #{taskName}
+    ORDER BY update_time DESC
+  </select>
+<!--根据服务商组织的id查询指定状态下的巡检任务-->
+  <select id="queryTaskByFacilitatorGroupIdAndStatus" resultType="com.ananops.provider.model.domain.ImcInspectionTask">
+    SELECT
+    <include refid="Base_Column_List">
+      <property name="alias" value="task"></property>
+    </include>
+    FROM
+    an_imc_inspection_task as task , an_imc_facilitator_group_task as facilitatorGroupTask
+    WHERE 1=1 AND facilitatorGroupTask.facilitator_group_id = #{facilitatorGroupId} AND task.id = facilitatorGroupTask.task_id AND task.status = #{status}
+    ORDER BY update_time DESC
+  </select>
+  <!--根据服务商组织的id和任务名模糊查询指定状态下的巡检任务-->
+  <select id="queryTaskByFacilitatorGroupIdAndStatusAndTaskName" resultType="com.ananops.provider.model.domain.ImcInspectionTask">
+    SELECT
+    <include refid="Base_Column_List">
+      <property name="alias" value="task"></property>
+    </include>
+    FROM
+    an_imc_inspection_task as task , an_imc_facilitator_group_task as facilitatorGroupTask
+    WHERE 1=1 AND facilitatorGroupTask.facilitator_group_id = #{facilitatorGroupId} AND task.id = facilitatorGroupTask.task_id AND task.status = #{status}
+    AND task.task_name like #{taskName}
+    ORDER BY update_time DESC
+  </select>
+  <!--获取全部未分配工程师，并且距离截止日期已不足10天的巡检任务-->
+  <resultMap id="undistributedTaskList" type="com.ananops.provider.model.dto.UndistributedImcTaskDto" extends="BaseResultMap">
+    <result column="endDate" jdbcType="TIMESTAMP" property="endDate" />
+    <result column="remainDays" jdbcType="INTEGER" property="remainDays" />
+  </resultMap>
+  <select id="queryAllUndistributedTaskWithTime" resultMap="undistributedTaskList">
+    SELECT
+    <include refid="Base_Column_List">
+      <property name="alias" value="task"></property>
+    </include>
+    ,DATE_ADD(item.scheduled_start_time,INTERVAL item.days DAY) as endDate,
+    DATEDIFF(DATE_ADD(item.scheduled_start_time,INTERVAL item.days DAY),NOW()) as remainDays
+    FROM
+    an_imc_inspection_task as task,an_imc_inspection_item as item
+    WHERE 1=1 AND item.status = 1 and item.inspection_task_id = task.id
+    AND DATEDIFF(DATE_ADD(item.scheduled_start_time,INTERVAL item.days DAY),NOW())>=0
+    AND DATEDIFF(DATE_ADD(item.scheduled_start_time,INTERVAL item.days DAY),NOW()) &lt;=3
+  </select>
+  <!--根据服务商组织的id查询全部未分配维修工的巡检任务-->
+  <select id="queryAllUnDistributedTask" resultType="com.ananops.provider.model.domain.ImcInspectionTask">
+    SELECT
+    <include refid="Base_Column_List">
+      <property name="alias" value="task"></property>
+    </include>
+    FROM
+    an_imc_inspection_task as task
+    WHERE 1=1
+    AND task.facilitator_id = #{facilitatorId}
+    AND task.status = 3
+    AND task.id IN
+    (
+    SELECT DISTINCT item.inspection_task_id
+    FROM an_imc_inspection_item as item
+    WHERE item.inspection_task_id = task.id
+    AND item.status &lt; 4
+    UNION
+    SELECT task2.id
+    FROM an_imc_inspection_task as task2,an_imc_inspection_item as item
+    WHERE
+    task2.facilitator_id = #{facilitatorId}
+    AND task2.status = 3
+    AND task2.id not in
+    (
+    SELECT inspection_task_id
+    FROM an_imc_inspection_item
+    WHERE inspection_task_id is not NULL
+    )
+    )
+    ORDER BY update_time DESC
+  </select>
+
+    <!--根据服务商组织的id查询全部服务商已完成的巡检任务-->
+    <select id="queryAllFinishedTaskByFacilitatorId" resultType="com.ananops.provider.model.domain.ImcInspectionTask">
+        SELECT
+        <include refid="Base_Column_List">
+            <property name="alias" value="task"></property>
+        </include>
+        FROM
+        an_imc_inspection_task as task
+        WHERE 1=1
+        AND task.status &gt; 3
+        AND task.facilitator_id = #{facilitatorId}
+      ORDER BY update_time DESC
+    </select>
+</mapper>

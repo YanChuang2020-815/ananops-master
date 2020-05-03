@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ananops.provider.mapper.PmcInspectTaskMapper" >
+  <resultMap id="BaseResultMap" type="com.ananops.provider.model.domain.PmcInspectTask" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="version" property="version" jdbcType="VARCHAR" />
+    <result column="project_id" property="projectId" jdbcType="BIGINT" />
+    <result column="project_name" property="projectName" jdbcType="VARCHAR" />
+    <result column="task_name" property="taskName" jdbcType="VARCHAR" />
+    <result column="task_type" property="taskType" jdbcType="VARCHAR" />
+    <result column="inspection_content" property="inspectionContent" jdbcType="VARCHAR" />
+    <result column="inspection_condition" property="inspectionCondition" jdbcType="VARCHAR" />
+    <result column="deal_result" property="dealResult" jdbcType="VARCHAR" />
+    <result column="cycle_time" property="cycleTime" jdbcType="INTEGER" />
+    <result column="scheduled_start_time" property="scheduledStartTime" jdbcType="TIMESTAMP" />
+    <result column="deadline_time" property="deadlineTime" jdbcType="TIMESTAMP" />
+    <result column="scheduled_finish_time" property="scheduledFinishTime" jdbcType="INTEGER" />
+    <result column="is_now" property="isNow" jdbcType="INTEGER" />
+    <result column="point_sum" property="pointSum" jdbcType="INTEGER" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="creator" property="creator" jdbcType="VARCHAR" />
+    <result column="creator_id" property="creatorId" jdbcType="BIGINT" />
+    <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="last_operator" property="lastOperator" jdbcType="VARCHAR" />
+    <result column="last_operator_id" property="lastOperatorId" jdbcType="BIGINT" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+</mapper>

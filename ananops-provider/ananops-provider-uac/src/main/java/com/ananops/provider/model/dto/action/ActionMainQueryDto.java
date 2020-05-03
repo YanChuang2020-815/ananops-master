@@ -1,0 +1,52 @@
+/*
+ * Copyright (c) 2019. ananops.com All Rights Reserved.
+ * 项目名称：ananops平台
+ * 类名称：ActionMainQueryDto.java
+ * 创建人：ananops
+ * 平台官网: http://ananops.com
+ */
+
+package com.ananops.provider.model.dto.action;
+
+import com.ananops.base.dto.BaseQuery;
+import io.swagger.annotations.ApiModel;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+import java.util.List;
+
+/**
+ * The class Action main query dto.
+ *
+ * @author ananops.com @gmail.com
+ */
+@EqualsAndHashCode(callSuper = true)
+@Data
+@ApiModel
+public class ActionMainQueryDto extends BaseQuery {
+	private static final long serialVersionUID = -1755881173841393763L;
+	/**
+	 * 资源路径
+	 */
+	private String url;
+
+	/**
+	 * 权限名称
+	 */
+	private String actionName;
+
+	/**
+	 * 权限编码
+	 */
+	private String actionCode;
+
+	/**
+	 * 状态
+	 */
+	private String status;
+
+	/**
+	 * 菜单ID
+	 */
+	private List<Long> menuIdList;
+}

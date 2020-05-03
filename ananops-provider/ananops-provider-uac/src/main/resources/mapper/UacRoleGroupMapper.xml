@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ananops.provider.mapper.UacRoleGroupMapper" >
+  <resultMap id="BaseResultMap" type="com.ananops.provider.model.domain.UacRoleGroup" >
+    <id column="role_id" property="roleId" jdbcType="BIGINT" />
+    <id column="group_id" property="groupId" jdbcType="BIGINT" />
+  </resultMap>
+  <delete id="deleteByRoleIdList">
+    delete from an_uac_role_group
+    where role_id in
+    <foreach collection="roleIdList" item="item" index="index" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </delete>
+  <delete id="deleteByGroupIdAndRoleIds">
+    delete from an_uac_role_group
+    where group_id = #{groupId, jdbcType=BIGINT} and role_id in
+    <foreach collection="roleIdList" item="item" index="index" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </delete>
+</mapper>

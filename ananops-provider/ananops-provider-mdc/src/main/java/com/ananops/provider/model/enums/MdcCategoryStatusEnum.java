@@ -1,0 +1,91 @@
+/*
+ * Copyright (c) 2019. ananops.com All Rights Reserved.
+ * 项目名称：ananops平台
+ * 类名称：MdcCategoryStatusEnum.java
+ * 创建人：ananops
+ * 平台官网: http://ananops.com
+ */
+
+package com.ananops.provider.model.enums;
+
+
+/**
+ * The enum Mdc category status enum.
+ *
+ * @author ananops.com @gmail.com
+ */
+public enum MdcCategoryStatusEnum {
+	/**
+	 * 启用
+	 */
+	ENABLE(1, "启用"),
+	/**
+	 * 禁用
+	 */
+	DISABLE(2, "禁用");
+
+	/**
+	 * The Type.
+	 */
+	int type;
+	/**
+	 * The Name.
+	 */
+	String name;
+
+	MdcCategoryStatusEnum(int type, String name) {
+		this.type = type;
+		this.name = name;
+	}
+
+	/**
+	 * Gets type.
+	 *
+	 * @return the type
+	 */
+	public int getType() {
+		return type;
+	}
+
+	/**
+	 * Gets name.
+	 *
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+
+
+	/**
+	 * Gets name.
+	 *
+	 * @param type the type
+	 *
+	 * @return the name
+	 */
+	public static String getName(int type) {
+		for (MdcCategoryStatusEnum ele : MdcCategoryStatusEnum.values()) {
+			if (type == ele.getType()) {
+				return ele.getName();
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Gets enum.
+	 *
+	 * @param type the type
+	 *
+	 * @return the enum
+	 */
+	public static MdcCategoryStatusEnum getEnum(int type) {
+		for (MdcCategoryStatusEnum ele : MdcCategoryStatusEnum.values()) {
+			if (type == ele.getType()) {
+				return ele;
+			}
+		}
+		return MdcCategoryStatusEnum.ENABLE;
+	}
+}

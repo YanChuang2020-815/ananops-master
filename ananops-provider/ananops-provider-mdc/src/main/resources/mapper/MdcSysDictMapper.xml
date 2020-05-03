@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ananops.provider.mapper.MdcSysDictMapper" >
+    <resultMap id="BaseResultMap" type="com.ananops.provider.model.domain.MdcSysDict" >
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" property="Id" jdbcType="BIGINT" />
+        <result column="dict_level" property="dictLevel" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="CHAR" />
+        <result column="mark" property="mark" jdbcType="VARCHAR" />
+        <result column="group_id" property="groupId" jdbcType="BIGINT" />
+        <result column="dr" property="dr" jdbcType="VARCHAR" />
+        <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+        <result column="version" property="version" jdbcType="INTEGER" />
+        <result column="creator" property="creator" jdbcType="VARCHAR" />
+        <result column="creator_id" property="creatorId" jdbcType="BIGINT" />
+        <result column="last_operator" property="lastOperator" jdbcType="VARCHAR" />
+        <result column="last_operator_id" property="lastOperatorId" jdbcType="BIGINT" />
+        <result column="name" property="name" jdbcType="LONGVARCHAR" />
+    </resultMap>
+</mapper>

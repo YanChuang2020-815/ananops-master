@@ -1,0 +1,35 @@
+spring:
+  profiles: #配置中心本地路径
+    active: native
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: /home/ananops/ananops-config-repo
+#        git:
+#        uri: https://github.com/SongOf/ananops-config-repo/ananops-config-repo.git
+#        username:
+#        password:
+#        search-paths: /*
+#        default-label: ${spring.profiles.active}
+#        basedir: /data/config/ananops-config-repo
+    inetutils:
+      ignoredInterfaces:
+        - docker0
+        - veth.*
+      preferredNetworks:
+        - 10.108
+
+encrypt:
+  key-store:
+    location: classpath:/server.jks
+    password: ananops-storepass
+    alias: ananops-key-store
+    secret: ananops-keypass
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://root:root@ananops-eureka:8761/eureka/
+  instance:
+    instance-id: ${spring.application.name}:${spring.cloud.client.ipAddress}:${server.port}

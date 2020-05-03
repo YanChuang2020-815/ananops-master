@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ananops.provider.mapper.WebsocketUserMessageInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.ananops.provider.model.domain.WebsocketUserMessageInfo" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="version" property="version" jdbcType="INTEGER" />
+    <result column="creator" property="creator" jdbcType="VARCHAR" />
+    <result column="creator_id" property="creatorId" jdbcType="BIGINT" />
+    <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="last_operator" property="lastOperator" jdbcType="VARCHAR" />
+    <result column="last_operator_id" property="lastOperatorId" jdbcType="BIGINT" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="userId" property="userid" jdbcType="BIGINT" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="message_topic" property="messageTopic" jdbcType="VARCHAR" />
+    <result column="message_tag" property="messageTag" jdbcType="VARCHAR" />
+    <result column="message_body" property="messageBody" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ${alias}.id,${alias}.version,${alias}.creator,${alias}.creator_id,${alias}.created_time,${alias}.last_operator,${alias}.last_operator_id,
+    ${alias}.update_time,${alias}.user_id,${alias}.status,${alias}.message_topic,${alias}.message_tag,${alias}.message_body
+  </sql>
+<!--  查询消息信息-->
+  <select id="getMsgInfo" resultType="com.ananops.provider.model.domain.WebsocketUserMessageInfo">
+    SELECT
+    <include refid="Base_Column_List">
+      <property name="alias" value="msgInfo"></property>
+    </include>
+    FROM
+    an_user_message_info as msgInfo
+    WHERE 1=1
+    <if test="userId != null">
+      AND msgInfo.user_id = #{userId}
+    </if>
+    <if test="status != null">
+      AND msgInfo.status = #{status}
+    </if>
+    <if test="messageTopic != null and messageTopic != ''">
+      AND msgInfo.message_topic like CONCAT('%',#{messageTopic,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="messageTag != null and messageTag != ''">
+      AND msgInfo.message_tag like CONCAT('%',#{messageTag,jdbcType=VARCHAR},'%')
+    </if>
+    ORDER BY msgInfo.created_time DESC
+  </select>
+</mapper>

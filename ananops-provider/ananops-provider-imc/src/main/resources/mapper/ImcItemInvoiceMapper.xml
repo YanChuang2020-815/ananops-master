@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ananops.provider.mapper.ImcItemInvoiceMapper" >
+  <resultMap id="BaseResultMap" type="com.ananops.provider.model.domain.ImcItemInvoice" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="template_id" property="templateId" jdbcType="BIGINT" />
+    <result column="inspc_item_id" property="inspcItemId" jdbcType="BIGINT" />
+    <result column="point_name" property="pointName" jdbcType="VARCHAR" />
+    <result column="point_address" property="pointAddress" jdbcType="VARCHAR" />
+    <result column="inspc_company_id" property="inspcCompanyId" jdbcType="BIGINT" />
+    <result column="inspc_company" property="inspcCompany" jdbcType="VARCHAR" />
+    <result column="inspc_result" property="inspcResult" jdbcType="VARCHAR" />
+    <result column="inspc_date" property="inspcDate" jdbcType="TIMESTAMP" />
+    <result column="user_confirm" property="userConfirm" jdbcType="VARCHAR" />
+    <result column="engineer_id" property="engineerId" jdbcType="BIGINT" />
+    <result column="engineer" property="engineer" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="CHAR" />
+    <result column="dr" property="dr" jdbcType="CHAR" />
+    <result column="version" property="version" jdbcType="INTEGER" />
+    <result column="creator" property="creator" jdbcType="VARCHAR" />
+    <result column="creator_id" property="creatorId" jdbcType="BIGINT" />
+    <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="last_operator" property="lastOperator" jdbcType="VARCHAR" />
+    <result column="last_operator_id" property="lastOperatorId" jdbcType="BIGINT" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+</mapper>

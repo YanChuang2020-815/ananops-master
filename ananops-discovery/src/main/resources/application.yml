@@ -1,0 +1,23 @@
+server:
+  port: 8080
+
+spring:
+  profiles:
+    active: dev
+  application:
+    name: ananops-discovery
+  rabbitmq:
+    host: ananops-mq-rabbit
+    port: 5672
+    username: guest
+    password: guest
+  boot:
+    admin:
+      username: admin
+      password: admin
+
+security:
+  user:
+    name: admin
+    password: admin
+

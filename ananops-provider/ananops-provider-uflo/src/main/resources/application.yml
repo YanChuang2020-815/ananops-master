@@ -1,0 +1,21 @@
+server:
+  port: 9407
+spring:
+  profiles:
+    active: dev
+  application:
+    name: ananops-provider-uflo
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://ananops-db-mysql:3306/ananops_uflo?characterEncoding=utf8&useSSL=false
+    username: root
+    password: 123456
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+        current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
+

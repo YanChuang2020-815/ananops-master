@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ananops.provider.mapper.PmcContractMapper" >
+  <resultMap id="BaseResultMap" type="com.ananops.provider.model.domain.PmcContract" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="version" property="version" jdbcType="VARCHAR" />
+    <result column="contract_code" property="contractCode" jdbcType="VARCHAR" />
+    <result column="contract_name" property="contractName" jdbcType="VARCHAR" />
+    <result column="contract_type" property="contractType" jdbcType="VARCHAR" />
+    <result column="party_a_id" property="partyAId" jdbcType="BIGINT" />
+    <result column="party_a_name" property="partyAName" jdbcType="VARCHAR" />
+    <result column="a_legal_name" property="aLegalName" jdbcType="VARCHAR" />
+    <result column="party_b_id" property="partyBId" jdbcType="BIGINT" />
+    <result column="party_b_name" property="partyBName" jdbcType="VARCHAR" />
+    <result column="b_legal_name" property="bLegalName" jdbcType="VARCHAR" />
+    <result column="bank_name" property="bankName" jdbcType="VARCHAR" />
+    <result column="bank_account" property="bankAccount" jdbcType="VARCHAR" />
+    <result column="sign_time" property="signTime" jdbcType="TIMESTAMP" />
+    <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="is_postpone" property="isPostpone" jdbcType="INTEGER" />
+    <result column="payment_type" property="paymentType" jdbcType="INTEGER" />
+    <result column="payment_money" property="paymentMoney" jdbcType="DECIMAL" />
+    <result column="project_money" property="projectMoney" jdbcType="DECIMAL" />
+    <result column="payment_time" property="paymentTime" jdbcType="TIMESTAMP" />
+    <result column="device_count" property="deviceCount" jdbcType="INTEGER" />
+    <result column="agent_content" property="agentContent" jdbcType="VARCHAR" />
+    <result column="is_spare_part" property="isSparePart" jdbcType="INTEGER" />
+    <result column="is_spare_service" property="isSpareService" jdbcType="INTEGER" />
+    <result column="assit_money" property="assitMoney" jdbcType="DECIMAL" />
+    <result column="last_response_time" property="lastResponseTime" jdbcType="INTEGER" />
+    <result column="verification" property="verification" jdbcType="VARCHAR" />
+    <result column="record_time" property="recordTime" jdbcType="INTEGER" />
+    <result column="is_change" property="isChange" jdbcType="INTEGER" />
+    <result column="is_destory" property="isDestory" jdbcType="INTEGER" />
+    <result column="file_path" property="filePath" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="creator_id" property="creatorId" jdbcType="BIGINT" />
+    <result column="creator" property="creator" jdbcType="VARCHAR" />
+    <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="last_operator" property="lastOperator" jdbcType="VARCHAR" />
+    <result column="last_operator_id" property="lastOperatorId" jdbcType="BIGINT" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+</mapper>

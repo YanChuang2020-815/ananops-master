@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ananops.provider.mapper.ImcFileTaskItemStatusMapper" >
+  <resultMap id="BaseResultMap" type="com.ananops.provider.model.domain.ImcFileTaskItemStatus" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="taskId" property="taskid" jdbcType="BIGINT" />
+    <id column="itemId" property="itemid" jdbcType="BIGINT" />
+    <result column="attachmentId" property="attachmentid" jdbcType="BIGINT" />
+    <result column="itemStatus" property="itemstatus" jdbcType="INTEGER" />
+    <result column="refNo" property="refno" jdbcType="VARCHAR" />
+  </resultMap>
+</mapper>
