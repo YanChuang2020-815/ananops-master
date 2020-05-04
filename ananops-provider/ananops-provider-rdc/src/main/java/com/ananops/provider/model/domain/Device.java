@@ -44,5 +44,32 @@ public class Device extends BaseEntity {
      * 设备库存
      */
     private Integer store;
-    
+
+    /**
+     * 设备在全景图中的经度
+     */
+    private BigDecimal longitude;
+
+    /**
+     * 设备在全景图中的纬度
+     */
+    private BigDecimal latitude;
+
+    /**
+     * 设备图片的流水号
+     */
+    @Column(name = "ref_no")
+    private String refNo;
+
+    /**
+     * 设备ID
+     */
+    @Column(name = "device_id")
+    private String deviceId;
+
+    /**
+     * 组织ID
+     */
+    @Column(name = "group_id")
+    private Long groupId;
 }
