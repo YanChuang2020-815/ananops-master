@@ -7,5 +7,16 @@
         -->
         <result column="scene_id" property="sceneId" jdbcType="BIGINT" />
         <result column="device_id" property="deviceId" jdbcType="BIGINT" />
+        <result column="longitude" property="longitude" jdbcType="DECIMAL" />
+        <result column="latitude" property="latitude" jdbcType="DECIMAL" />
     </resultMap>
+
+<!--    删除场景中绑定的设备-->
+    <delete id="deleteBindedDevice">
+        DELETE FROM
+        an_rdc_scene_device as sd
+        WHERE 1=1
+        AND sd.scene_id=#{sceneId}
+        AND sd.device_id=#{deviceId}
+    </delete>
 </mapper>

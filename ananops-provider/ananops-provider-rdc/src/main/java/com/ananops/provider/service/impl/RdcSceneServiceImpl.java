@@ -6,9 +6,14 @@ import com.ananops.base.dto.LoginAuthDto;
 import com.ananops.base.enums.ErrorCodeEnum;
 import com.ananops.base.exception.BusinessException;
 import com.ananops.core.support.BaseService;
+import com.ananops.provider.mapper.DeviceMapper;
+import com.ananops.provider.mapper.RdcSceneDeviceMapper;
 import com.ananops.provider.mapper.RdcSceneMapper;
+import com.ananops.provider.model.domain.Device;
 import com.ananops.provider.model.domain.RdcScene;
+import com.ananops.provider.model.domain.RdcSceneDevice;
 import com.ananops.provider.model.dto.RdcAddSceneDto;
+import com.ananops.provider.model.dto.RdcSceneDeviceQueryDto;
 import com.ananops.provider.model.dto.attachment.OptAttachmentUpdateReqDto;
 import com.ananops.provider.model.dto.attachment.OptUploadFileByteInfoReqDto;
 import com.ananops.provider.model.dto.oss.ElementImgUrlDto;
@@ -16,6 +21,7 @@ import com.ananops.provider.model.dto.oss.OptBatchGetUrlRequest;
 import com.ananops.provider.model.dto.oss.OptUploadFileReqDto;
 import com.ananops.provider.model.dto.oss.OptUploadFileRespDto;
 import com.ananops.provider.model.service.UacGroupFeignApi;
+import com.ananops.provider.model.vo.RdcBindedDeviceVo;
 import com.ananops.provider.model.vo.RdcSceneVo;
 import com.ananops.provider.service.OpcOssFeignApi;
 import com.ananops.provider.service.RdcSceneService;
@@ -49,6 +55,12 @@ public class RdcSceneServiceImpl extends BaseService<RdcScene> implements RdcSce
 
     @Resource
     OpcOssFeignApi opcOssFeignApi;
+
+    @Resource
+    RdcSceneDeviceMapper rdcSceneDeviceMapper;
+
+    @Resource
+    DeviceMapper deviceMapper;
 
     @Override
     public RdcScene saveRdcScene(LoginAuthDto loginAuthDto, RdcAddSceneDto rdcAddSceneDto){
@@ -185,5 +197,51 @@ public class RdcSceneServiceImpl extends BaseService<RdcScene> implements RdcSce
             rdcSceneVo.setUrl(elementImgUrlDtoList.get(0).getUrl());
         }
         return rdcSceneVo;
+    }
+
+    @Override
+    public RdcSceneDevice sceneBindDevice(RdcSceneDevice rdcSceneDevice){
+        rdcSceneDeviceMapper.insert(rdcSceneDevice);
+        return rdcSceneDevice;
+    }
+
+    @Override
+    public List<RdcBindedDeviceVo> getDeviceBySceneId(Long sceneId){
+        List<RdcBindedDeviceVo> rdcBindedDeviceVoList = new ArrayList<>();
+        Example example = new Example(RdcSceneDevice.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("sceneId",sceneId);
+        List<RdcSceneDevice> rdcSceneDeviceList = rdcSceneDeviceMapper.selectByExample(example);
+        rdcSceneDeviceList.forEach(rdcSceneDevice -> {
+            RdcBindedDeviceVo rdcBindedDeviceVo = new RdcBindedDeviceVo();
+            BeanUtils.copyProperties(rdcSceneDevice,rdcBindedDeviceVo);
+            Device device = deviceMapper.selectByPrimaryKey(rdcSceneDevice.getDeviceId());
+            rdcBindedDeviceVo.setName(device.getName());
+            String refNo = device.getRefNo();
+            OptBatchGetUrlRequest optBatchGetUrlRequest = new OptBatchGetUrlRequest();
+            optBatchGetUrlRequest.setRefNo(refNo);
+            optBatchGetUrlRequest.setEncrypt(true);
+            List<ElementImgUrlDto> elementImgUrlDtoList = opcOssFeignApi.listFileUrl(optBatchGetUrlRequest).getResult();
+            if(null!=elementImgUrlDtoList&&elementImgUrlDtoList.size()>0){
+                rdcBindedDeviceVo.setUrl(elementImgUrlDtoList.get(0).getUrl());
+            }
+            rdcBindedDeviceVoList.add(rdcBindedDeviceVo);
+        });
+        return rdcBindedDeviceVoList;
+    }
+
+    @Override
+    public void deleteBindedDevice(RdcSceneDeviceQueryDto rdcSceneDeviceQueryDto){
+        Long sceneId = rdcSceneDeviceQueryDto.getSceneId();
+        Long deviceId = rdcSceneDeviceQueryDto.getDeviceId();
+        Example example = new Example(RdcSceneDevice.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("sceneId",sceneId);
+        criteria.andEqualTo("deviceId",deviceId);
+        try{
+            rdcSceneDeviceMapper.deleteByExample(example);
+        }catch (Exception e){
+            throw new BusinessException(ErrorCodeEnum.GL9999098,rdcSceneDeviceQueryDto);
+        }
     }
 }

@@ -2,9 +2,12 @@ package com.ananops.provider.web.fronted;
 
 import com.ananops.core.support.BaseController;
 import com.ananops.provider.model.domain.RdcScene;
+import com.ananops.provider.model.domain.RdcSceneDevice;
 import com.ananops.provider.model.dto.RdcAddSceneDto;
+import com.ananops.provider.model.dto.RdcSceneDeviceQueryDto;
 import com.ananops.provider.model.dto.oss.OptUploadFileReqDto;
 import com.ananops.provider.model.dto.oss.OptUploadFileRespDto;
+import com.ananops.provider.model.vo.RdcBindedDeviceVo;
 import com.ananops.provider.model.vo.RdcSceneVo;
 import com.ananops.provider.service.RdcSceneService;
 import com.ananops.wrapper.WrapMapper;
@@ -67,5 +70,25 @@ public class RdcSceneServiceController extends BaseController {
         }catch (Exception e){
             return WrapMapper.error("场景删除失败");
         }
+    }
+
+    @PostMapping(value = "/sceneBindDevice")
+    @ApiOperation(httpMethod = "POST", value = "为场景绑定设备")
+    public Wrapper<RdcSceneDevice> sceneBindDevice(@ApiParam(name = "sceneBindDevice",value = "为场景绑定设备")@RequestBody RdcSceneDevice rdcSceneDevice){
+        rdcSceneService.sceneBindDevice(rdcSceneDevice);
+        return WrapMapper.ok(rdcSceneDevice);
+    }
+
+    @GetMapping(value = "/getDeviceBySceneId/{sceneId}")
+    @ApiOperation(httpMethod = "GET", value = "获得场景下的全部设备")
+    public Wrapper<List<RdcBindedDeviceVo>> getDeviceBySceneId(@PathVariable Long sceneId){
+        return WrapMapper.ok(rdcSceneService.getDeviceBySceneId(sceneId));
+    }
+
+    @DeleteMapping(value = "/deleteBindedDevice")
+    @ApiOperation(httpMethod = "DELETE", value = "删除场景中绑定的设备")
+    public Wrapper deleteBindedDevice(@RequestBody RdcSceneDeviceQueryDto rdcSceneDeviceQueryDto){
+        rdcSceneService.deleteBindedDevice(rdcSceneDeviceQueryDto);
+        return WrapMapper.ok();
     }
 }

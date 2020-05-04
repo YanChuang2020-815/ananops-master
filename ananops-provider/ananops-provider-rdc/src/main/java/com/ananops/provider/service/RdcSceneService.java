@@ -3,9 +3,12 @@ package com.ananops.provider.service;
 import com.ananops.base.dto.LoginAuthDto;
 import com.ananops.core.support.IService;
 import com.ananops.provider.model.domain.RdcScene;
+import com.ananops.provider.model.domain.RdcSceneDevice;
 import com.ananops.provider.model.dto.RdcAddSceneDto;
+import com.ananops.provider.model.dto.RdcSceneDeviceQueryDto;
 import com.ananops.provider.model.dto.oss.OptUploadFileReqDto;
 import com.ananops.provider.model.dto.oss.OptUploadFileRespDto;
+import com.ananops.provider.model.vo.RdcBindedDeviceVo;
 import com.ananops.provider.model.vo.RdcSceneVo;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -20,4 +23,10 @@ public interface RdcSceneService extends IService<RdcScene> {
     List<OptUploadFileRespDto> uploadRdcScenePic(MultipartHttpServletRequest multipartRequest, OptUploadFileReqDto optUploadFileReqDto, LoginAuthDto loginAuthDto);
 
     List<RdcSceneVo> getAllRdcScene(LoginAuthDto loginAuthDto);
+
+    RdcSceneDevice sceneBindDevice(RdcSceneDevice rdcSceneDevice);
+
+    List<RdcBindedDeviceVo> getDeviceBySceneId(Long sceneId);
+
+    void deleteBindedDevice(RdcSceneDeviceQueryDto rdcSceneDeviceQueryDto);
 }
