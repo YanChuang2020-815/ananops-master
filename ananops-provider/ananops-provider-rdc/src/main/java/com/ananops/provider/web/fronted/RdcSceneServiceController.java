@@ -1,12 +1,14 @@
 package com.ananops.provider.web.fronted;
 
 import com.ananops.core.support.BaseController;
+import com.ananops.provider.model.domain.RdcArrow;
 import com.ananops.provider.model.domain.RdcScene;
 import com.ananops.provider.model.domain.RdcSceneDevice;
 import com.ananops.provider.model.dto.RdcAddSceneDto;
 import com.ananops.provider.model.dto.RdcSceneDeviceQueryDto;
 import com.ananops.provider.model.dto.oss.OptUploadFileReqDto;
 import com.ananops.provider.model.dto.oss.OptUploadFileRespDto;
+import com.ananops.provider.model.vo.RdcArrowVo;
 import com.ananops.provider.model.vo.RdcBindedDeviceVo;
 import com.ananops.provider.model.vo.RdcSceneVo;
 import com.ananops.provider.service.RdcSceneService;
@@ -90,5 +92,24 @@ public class RdcSceneServiceController extends BaseController {
     public Wrapper deleteBindedDevice(@RequestBody RdcSceneDeviceQueryDto rdcSceneDeviceQueryDto){
         rdcSceneService.deleteBindedDevice(rdcSceneDeviceQueryDto);
         return WrapMapper.ok();
+    }
+
+    @PostMapping(value = "/createRdcArrow")
+    @ApiOperation(httpMethod = "POST",value = "添加箭头")
+    public Wrapper<RdcArrow> createRdcArrow(@ApiParam(name = "createRdcArrow",value = "添加箭头")@RequestBody RdcArrow rdcArrow){
+        return WrapMapper.ok(rdcSceneService.createRdcArrow(getLoginAuthDto(),rdcArrow));
+    }
+
+    @DeleteMapping(value = "/deleteRdcArrow/{arrowId}")
+    @ApiOperation(httpMethod = "DELETE", value = "删除场景中的箭头")
+    public Wrapper deleteRdcArrow(@PathVariable Long arrowId){
+        rdcSceneService.deleteRdcArrow(arrowId);
+        return WrapMapper.ok();
+    }
+
+    @GetMapping(value = "/getArrowBySceneId/{sceneId}")
+    @ApiOperation(httpMethod = "GET", value = "获得场景下的全部箭头")
+    public Wrapper<List<RdcArrowVo>> getArrowBySceneId(@PathVariable Long sceneId){
+        return WrapMapper.ok(rdcSceneService.getRdcArrowsBySceneId(sceneId));
     }
 }

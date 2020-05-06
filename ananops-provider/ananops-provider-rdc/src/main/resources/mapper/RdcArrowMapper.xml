@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ananops.provider.mapper.RdcArrowMapper" >
+  <resultMap id="BaseResultMap" type="com.ananops.provider.model.domain.RdcArrow" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="version" property="version" jdbcType="INTEGER" />
+    <result column="creator" property="creator" jdbcType="VARCHAR" />
+    <result column="creator_id" property="creatorId" jdbcType="BIGINT" />
+    <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="last_operator" property="lastOperator" jdbcType="VARCHAR" />
+    <result column="last_operator_id" property="lastOperatorId" jdbcType="BIGINT" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="cur_scene_id" property="curSceneId" jdbcType="BIGINT" />
+    <result column="next_scene_id" property="nextSceneId" jdbcType="BIGINT" />
+    <result column="longitude" property="longitude" jdbcType="DECIMAL" />
+    <result column="latitude" property="latitude" jdbcType="DECIMAL" />
+  </resultMap>
+  <resultMap id="RdcArrowVoResultMap" type="com.ananops.provider.model.dto.RdcArrowQueryDto">
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="longitude" property="longitude" jdbcType="DECIMAL" />
+    <result column="latitude" property="latitude" jdbcType="DECIMAL" />
+    <result column="scene_id" property="sceneId" jdbcType="BIGINT" />
+    <result column="scene_name" property="sceneName" jdbcType="VARCHAR" />
+    <result column="ref_no" property="refNo" jdbcType="VARCHAR"/>
+  </resultMap>
+
+<!--  根据当前场景id查询该场景下的全部箭头以及箭头指向的场景-->
+  <select id="queryAllArrowBySceneId" resultMap="RdcArrowVoResultMap">
+    SELECT
+    arrow.id,arrow.longitude,arrow.latitude,scene.id as scene_id,scene.scene_name,scene.ref_no
+    FROM an_rdc_scene as scene,an_rdc_arrow as arrow
+    WHERE 1=1
+    AND arrow.cur_scene_id = #{sceneId}
+    AND arrow.next_scene_id = scene.id
+  </select>
+</mapper>

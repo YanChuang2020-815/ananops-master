@@ -7,12 +7,15 @@ import com.ananops.base.enums.ErrorCodeEnum;
 import com.ananops.base.exception.BusinessException;
 import com.ananops.core.support.BaseService;
 import com.ananops.provider.mapper.DeviceMapper;
+import com.ananops.provider.mapper.RdcArrowMapper;
 import com.ananops.provider.mapper.RdcSceneDeviceMapper;
 import com.ananops.provider.mapper.RdcSceneMapper;
 import com.ananops.provider.model.domain.Device;
+import com.ananops.provider.model.domain.RdcArrow;
 import com.ananops.provider.model.domain.RdcScene;
 import com.ananops.provider.model.domain.RdcSceneDevice;
 import com.ananops.provider.model.dto.RdcAddSceneDto;
+import com.ananops.provider.model.dto.RdcArrowQueryDto;
 import com.ananops.provider.model.dto.RdcSceneDeviceQueryDto;
 import com.ananops.provider.model.dto.attachment.OptAttachmentUpdateReqDto;
 import com.ananops.provider.model.dto.attachment.OptUploadFileByteInfoReqDto;
@@ -21,6 +24,7 @@ import com.ananops.provider.model.dto.oss.OptBatchGetUrlRequest;
 import com.ananops.provider.model.dto.oss.OptUploadFileReqDto;
 import com.ananops.provider.model.dto.oss.OptUploadFileRespDto;
 import com.ananops.provider.model.service.UacGroupFeignApi;
+import com.ananops.provider.model.vo.RdcArrowVo;
 import com.ananops.provider.model.vo.RdcBindedDeviceVo;
 import com.ananops.provider.model.vo.RdcSceneVo;
 import com.ananops.provider.service.OpcOssFeignApi;
@@ -32,7 +36,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import sun.rmi.runtime.Log;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
@@ -61,6 +64,9 @@ public class RdcSceneServiceImpl extends BaseService<RdcScene> implements RdcSce
 
     @Resource
     DeviceMapper deviceMapper;
+
+    @Resource
+    RdcArrowMapper rdcArrowMapper;
 
     @Override
     public RdcScene saveRdcScene(LoginAuthDto loginAuthDto, RdcAddSceneDto rdcAddSceneDto){
@@ -243,5 +249,49 @@ public class RdcSceneServiceImpl extends BaseService<RdcScene> implements RdcSce
         }catch (Exception e){
             throw new BusinessException(ErrorCodeEnum.GL9999098,rdcSceneDeviceQueryDto);
         }
+    }
+
+    @Override
+    public RdcArrow createRdcArrow(LoginAuthDto loginAuthDto,RdcArrow rdcArrow){
+        rdcArrow.setUpdateInfo(loginAuthDto);
+        Long id = super.generateId();
+        rdcArrow.setId(id);
+        try{
+            rdcArrowMapper.insert(rdcArrow);
+        }catch (Exception e){
+            throw new BusinessException(ErrorCodeEnum.GL99990100);
+        }
+        return rdcArrow;
+    }
+
+    @Override
+    public void deleteRdcArrow(Long arrowId){
+        try{
+            rdcArrowMapper.deleteByPrimaryKey(arrowId);
+        }catch (Exception e){
+            throw new BusinessException(ErrorCodeEnum.GL99990100);
+        }
+    }
+
+    @Override
+    public List<RdcArrowVo> getRdcArrowsBySceneId(Long sceneId){
+        List<RdcArrowQueryDto> rdcArrowQueryDtos = rdcArrowMapper.queryAllArrowBySceneId(sceneId);
+        List<RdcArrowVo> rdcArrowVos = new ArrayList<>();
+        if(null!=rdcArrowQueryDtos&&rdcArrowQueryDtos.size()>0){
+            rdcArrowQueryDtos.forEach(rdcArrowQueryDto -> {
+                RdcArrowVo rdcArrowVo = new RdcArrowVo();
+                BeanUtils.copyProperties(rdcArrowQueryDto,rdcArrowVo);
+                String refNo = rdcArrowQueryDto.getRefNo();
+                OptBatchGetUrlRequest optBatchGetUrlRequest = new OptBatchGetUrlRequest();
+                optBatchGetUrlRequest.setRefNo(refNo);
+                optBatchGetUrlRequest.setEncrypt(true);
+                List<ElementImgUrlDto> elementImgUrlDtoList = opcOssFeignApi.listFileUrl(optBatchGetUrlRequest).getResult();
+                if(null!=elementImgUrlDtoList&&elementImgUrlDtoList.size()>0){
+                    rdcArrowVo.setUrl(elementImgUrlDtoList.get(0).getUrl());
+                }
+                rdcArrowVos.add(rdcArrowVo);
+            });
+        }
+        return rdcArrowVos;
     }
 }
