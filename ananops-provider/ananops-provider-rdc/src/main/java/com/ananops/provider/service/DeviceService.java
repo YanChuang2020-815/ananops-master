@@ -22,4 +22,6 @@ public interface DeviceService extends IService<Device> {
     Device createDevice(LoginAuthDto loginAuthDto, RdcAddDeviceDto rdcAddDeviceDto);
 
     List<RdcDeviceVo> getAllDevice(LoginAuthDto loginAuthDto);
+
+    void deleteDevice(Long deviceId);
 }

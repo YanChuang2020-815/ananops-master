@@ -41,4 +41,11 @@ public class RdcDeviceController extends BaseController {
     public Wrapper<List<RdcDeviceVo>> getAllDevice(){
         return WrapMapper.ok(deviceService.getAllDevice(getLoginAuthDto()));
     }
+
+    @DeleteMapping(value = "/deleteDevice/{deviceId}")
+    @ApiOperation(httpMethod = "DELETE", value = "删除设备")
+    public Wrapper deleteDevice(@PathVariable Long deviceId){
+        deviceService.deleteDevice(deviceId);
+        return WrapMapper.ok();
+    }
 }

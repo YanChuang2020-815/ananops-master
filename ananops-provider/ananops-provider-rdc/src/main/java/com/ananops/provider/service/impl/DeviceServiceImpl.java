@@ -6,7 +6,9 @@ import com.ananops.base.enums.ErrorCodeEnum;
 import com.ananops.base.exception.BusinessException;
 import com.ananops.core.support.BaseService;
 import com.ananops.provider.mapper.DeviceMapper;
+import com.ananops.provider.mapper.RdcSceneDeviceMapper;
 import com.ananops.provider.model.domain.Device;
+import com.ananops.provider.model.domain.RdcSceneDevice;
 import com.ananops.provider.model.dto.RdcAddDeviceDto;
 import com.ananops.provider.model.dto.attachment.OptAttachmentUpdateReqDto;
 import com.ananops.provider.model.dto.oss.ElementImgUrlDto;
@@ -34,6 +36,9 @@ public class DeviceServiceImpl extends BaseService<Device> implements DeviceServ
 
     @Resource
     OpcOssFeignApi opcOssFeignApi;
+
+    @Resource
+    RdcSceneDeviceMapper rdcSceneDeviceMapper;
 
     public List<Device> getAllDevicesSelective(JSONObject json) {
         Device device = new Device();
@@ -152,5 +157,18 @@ public class DeviceServiceImpl extends BaseService<Device> implements DeviceServ
             rdcDeviceVo.setUrl(elementImgUrlDtoList.get(0).getUrl());
         }
         return rdcDeviceVo;
+    }
+
+    @Override
+    public void deleteDevice(Long deviceId){
+        try{
+            deviceMapper.deleteByPrimaryKey(deviceId);
+            Example example = new Example(RdcSceneDevice.class);
+            Example.Criteria criteria = example.createCriteria();
+            criteria.andEqualTo("deviceId",deviceId);
+            rdcSceneDeviceMapper.deleteByExample(example);
+        }catch (Exception e){
+            throw new BusinessException(ErrorCodeEnum.GL99990100);
+        }
     }
 }
