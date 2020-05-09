@@ -76,6 +76,12 @@ public class DeviceServiceImpl extends BaseService<Device> implements DeviceServ
             throw new BusinessException(ErrorCodeEnum.UAC10015001);
         }
         device.setUpdateInfo(loginAuthDto);
+        Example example = new Example(Device.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("deviceId",rdcAddDeviceDto.getDeviceId());
+        if(deviceMapper.selectCountByExample(example)>0){
+            throw new BusinessException("设备已添加过了");
+        }
         if(device.isNew()){
             Long deviceId = super.generateId();
             device.setId(deviceId);
