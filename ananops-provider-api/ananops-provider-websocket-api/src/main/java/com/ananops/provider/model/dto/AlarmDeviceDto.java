@@ -23,7 +23,7 @@ public class AlarmDeviceDto implements Serializable {
 
     private BigDecimal latitude;
 
-    private List<DeviceCurDataDto> data;
+    private Double value;
 
     private String deviceName;
 }

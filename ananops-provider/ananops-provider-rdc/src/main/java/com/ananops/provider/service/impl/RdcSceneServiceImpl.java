@@ -300,7 +300,9 @@ public class RdcSceneServiceImpl extends BaseService<RdcScene> implements RdcSce
         if(null != rdcSceneDeviceWithCreator){
             BeanUtils.copyProperties(rdcSceneDeviceWithCreator,alarmDeviceDto);
             alarmDeviceDto.setDeviceName(deviceDataDto.getName());
-            alarmDeviceDto.setData(deviceDataDto.getData());
+            if(deviceDataDto.getData()!=null&&deviceDataDto.getData().size()>0){
+                alarmDeviceDto.setValue(deviceDataDto.getData().get(0).getValue());
+            }
             return alarmDeviceDto;
         }else{
             return alarmDeviceDto;
