@@ -25,6 +25,7 @@
         <module>ananops-provider-bill-api</module>
         <module>ananops-provider-uflo-api</module>
         <module>ananops-provider-rdc-api</module>
+        <module>ananops-provider-websocket-api</module>
     </modules>
 
     <dependencies>

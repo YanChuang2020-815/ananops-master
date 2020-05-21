@@ -5,6 +5,8 @@ import com.ananops.base.exception.BusinessException;
 import com.ananops.core.support.BaseService;
 import com.ananops.provider.mapper.WebsocketUserMessageInfoMapper;
 import com.ananops.provider.model.domain.WebsocketUserMessageInfo;
+import com.ananops.provider.model.dto.AlarmDeviceDto;
+import com.ananops.provider.model.dto.MsgDto;
 import com.ananops.provider.model.dto.MsgQueryDto;
 import com.ananops.provider.model.dto.MsgStatusChangeDto;
 import com.ananops.provider.service.WebSocketMsgService;
@@ -68,4 +70,8 @@ public class WebSocketMsgServiceImpl extends BaseService<WebsocketUserMessageInf
         }
     }
 
+    @Override
+    public void test(AlarmDeviceDto alarmDeviceDto){
+        logger.info("当前消息为：{}",alarmDeviceDto);
+    }
 }

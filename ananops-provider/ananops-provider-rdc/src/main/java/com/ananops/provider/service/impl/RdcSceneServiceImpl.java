@@ -14,9 +14,7 @@ import com.ananops.provider.model.domain.Device;
 import com.ananops.provider.model.domain.RdcArrow;
 import com.ananops.provider.model.domain.RdcScene;
 import com.ananops.provider.model.domain.RdcSceneDevice;
-import com.ananops.provider.model.dto.RdcAddSceneDto;
-import com.ananops.provider.model.dto.RdcArrowQueryDto;
-import com.ananops.provider.model.dto.RdcSceneDeviceQueryDto;
+import com.ananops.provider.model.dto.*;
 import com.ananops.provider.model.dto.attachment.OptAttachmentUpdateReqDto;
 import com.ananops.provider.model.dto.attachment.OptUploadFileByteInfoReqDto;
 import com.ananops.provider.model.dto.oss.ElementImgUrlDto;
@@ -293,5 +291,19 @@ public class RdcSceneServiceImpl extends BaseService<RdcScene> implements RdcSce
             });
         }
         return rdcArrowVos;
+    }
+
+    @Override
+    public AlarmDeviceDto getAlarmDevice(DeviceDataDto deviceDataDto){
+        RdcSceneDeviceWithCreator rdcSceneDeviceWithCreator = rdcSceneDeviceMapper.getSceneDevice(deviceDataDto.getDeviceId());
+        AlarmDeviceDto alarmDeviceDto = new AlarmDeviceDto();
+        if(null != rdcSceneDeviceWithCreator){
+            BeanUtils.copyProperties(rdcSceneDeviceWithCreator,alarmDeviceDto);
+            alarmDeviceDto.setDeviceName(deviceDataDto.getName());
+            alarmDeviceDto.setData(deviceDataDto.getData());
+            return alarmDeviceDto;
+        }else{
+            return alarmDeviceDto;
+        }
     }
 }

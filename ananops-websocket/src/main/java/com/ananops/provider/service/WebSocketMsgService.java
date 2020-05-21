@@ -2,6 +2,8 @@ package com.ananops.provider.service;
 
 import com.ananops.core.support.IService;
 import com.ananops.provider.model.domain.WebsocketUserMessageInfo;
+import com.ananops.provider.model.dto.AlarmDeviceDto;
+import com.ananops.provider.model.dto.MsgDto;
 import com.ananops.provider.model.dto.MsgQueryDto;
 import com.ananops.provider.model.dto.MsgStatusChangeDto;
 import com.github.pagehelper.PageInfo;
@@ -14,4 +16,6 @@ public interface WebSocketMsgService extends IService<WebsocketUserMessageInfo> 
     PageInfo getMsgInfo(MsgQueryDto msgQueryDto);
 
     Integer changeMsgStatus(MsgStatusChangeDto msgStatusChangeDto);
+
+    void test(AlarmDeviceDto alarmDeviceDto);
 }

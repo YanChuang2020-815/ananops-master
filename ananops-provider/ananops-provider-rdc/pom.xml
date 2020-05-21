@@ -29,6 +29,11 @@
         </dependency>
         <dependency>
             <groupId>com.ananops.provider.api</groupId>
+            <artifactId>ananops-provider-websocket-api</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.ananops.provider.api</groupId>
             <artifactId>ananops-provider-uac-api</artifactId>
         </dependency>
         <dependency>

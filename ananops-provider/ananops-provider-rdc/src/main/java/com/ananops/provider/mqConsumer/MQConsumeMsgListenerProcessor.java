@@ -4,6 +4,10 @@ package com.ananops.provider.mqConsumer;
  * Created by rongshuai on 2020/5/21 15:19
  */
 
+import com.alibaba.fastjson.JSON;
+import com.ananops.provider.model.dto.DeviceDataDto;
+import com.ananops.provider.model.dto.MsgDto;
+import com.ananops.provider.service.WebSocketFeignApi;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
 import org.apache.rocketmq.client.consumer.listener.MessageListenerConcurrently;
@@ -13,12 +17,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 @Component
 public class MQConsumeMsgListenerProcessor implements MessageListenerConcurrently {
     public static final Logger LOGGER = LoggerFactory.getLogger(MQConsumeMsgListenerProcessor.class);
 
+    @Resource
+    MsgProcesser msgProcesser;
 
     /**
      * 默认msg里只有一条消息，可以通过设置consumeMessageBatchMaxSize参数来批量接收消息
@@ -40,7 +47,10 @@ public class MQConsumeMsgListenerProcessor implements MessageListenerConcurrentl
             String tags = messageExt.getTags();
             String body = new String(messageExt.getBody(), "utf-8");
 
-            LOGGER.info("MQ消息topic={}, tags={}, 消息内容={}", topic,tags,body);
+            //LOGGER.info("MQ消息topic={}, tags={}, 消息内容={}", topic,tags,body);
+            DeviceDataDto deviceDataDto = JSON.parseObject(body,DeviceDataDto.class);
+            LOGGER.info("deviceDataDto={}",deviceDataDto);
+            msgProcesser.msgProcess(deviceDataDto);
         } catch (Exception e) {
             LOGGER.error("获取MQ消息内容异常{}",e);
         }

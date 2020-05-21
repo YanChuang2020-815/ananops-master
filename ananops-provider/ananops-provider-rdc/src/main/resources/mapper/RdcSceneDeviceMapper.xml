@@ -11,6 +11,17 @@
         <result column="latitude" property="latitude" jdbcType="DECIMAL" />
     </resultMap>
 
+    <resultMap id="DeviceResultMap" type="com.ananops.provider.model.dto.RdcSceneDeviceWithCreator" >
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <result column="creator_id" property="userId" jdbcType="BIGINT" />
+        <result column="scene_id" property="sceneId" jdbcType="BIGINT" />
+        <result column="device_id" property="deviceId" jdbcType="BIGINT" />
+        <result column="longitude" property="longitude" jdbcType="DECIMAL" />
+        <result column="latitude" property="latitude" jdbcType="DECIMAL" />
+    </resultMap>
+
 <!--    删除场景中绑定的设备-->
     <delete id="deleteBindedDevice">
         DELETE FROM
@@ -19,4 +30,13 @@
         AND sd.scene_id=#{sceneId}
         AND sd.device_id=#{deviceId}
     </delete>
+
+<!--    查询报警的设备-->
+    <select id="getSceneDevice" resultMap="DeviceResultMap">
+        SELECT device.creator_id,rs.scene_id,rs.device_id,rs.longitude,rs.latitude
+        FROM an_rdc_scene_device as rs,an_rdc_device as device
+        WHERE 1=1
+        AND device.device_id = #{deviceId}
+        AND device.id = rs.device_id
+    </select>
 </mapper>
