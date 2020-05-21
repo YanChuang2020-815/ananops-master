@@ -5,13 +5,12 @@ import com.ananops.base.exception.BusinessException;
 import com.ananops.core.support.BaseService;
 import com.ananops.provider.mapper.WebsocketUserMessageInfoMapper;
 import com.ananops.provider.model.domain.WebsocketUserMessageInfo;
-import com.ananops.provider.model.dto.AlarmDeviceDto;
-import com.ananops.provider.model.dto.MsgDto;
-import com.ananops.provider.model.dto.MsgQueryDto;
-import com.ananops.provider.model.dto.MsgStatusChangeDto;
+import com.ananops.provider.model.dto.*;
 import com.ananops.provider.service.WebSocketMsgService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -25,6 +24,9 @@ import java.util.List;
 public class WebSocketMsgServiceImpl extends BaseService<WebsocketUserMessageInfo> implements WebSocketMsgService {
     @Resource
     WebsocketUserMessageInfoMapper websocketUserMessageInfoMapper;
+
+    @Autowired
+    SimpMessagingTemplate messagingTemplate;
 
     /**
      * 消息信息查询
@@ -73,5 +75,15 @@ public class WebSocketMsgServiceImpl extends BaseService<WebsocketUserMessageInf
     @Override
     public void test(AlarmDeviceDto alarmDeviceDto){
         logger.info("当前消息为：{}",alarmDeviceDto);
+        Long userId = alarmDeviceDto.getUserId();
+        if(null!=userId){
+            WebSocketMsgDto<AlarmDeviceDto> webSocketMsgDto = new WebSocketMsgDto<>();
+            webSocketMsgDto.setMessageId(super.generateId());
+            webSocketMsgDto.setContent(alarmDeviceDto);
+            webSocketMsgDto.setTag("device");
+            webSocketMsgDto.setTopic("alarm");
+            logger.info("向用户：{}，发送消息：{}",userId,webSocketMsgDto);
+            messagingTemplate.convertAndSendToUser(String.valueOf(userId),"/queue/chat",webSocketMsgDto);
+        }
     }
 }
