@@ -12,3 +12,13 @@ spring:
     multipart:
       max-file-size: 5MB
       max-request-size: 50MB
+
+rocketmq:
+  consumer:
+    isOnOff: on
+    groupName: ananops-rdc-consumer
+    namesrvAddr: 123.56.46.27:9876
+    topics: deviceData,*
+    consumeThreadMin: 5
+    consumeThreadMax: 32
+    consumeMessageBatchMaxSize: 1
