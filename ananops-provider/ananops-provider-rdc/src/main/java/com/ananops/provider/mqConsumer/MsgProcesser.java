@@ -24,7 +24,7 @@ public class MsgProcesser {
     public void msgProcess(DeviceDataDto deviceDataDto){
         AlarmDeviceDto alarmDeviceDto = rdcSceneService.getAlarmDevice(deviceDataDto);
 
-        if(null!=alarmDeviceDto){
+        if(alarmDeviceDto.getDeviceId()!=null){
             webSocketFeignApi.pushMsg(alarmDeviceDto);
         }
 
