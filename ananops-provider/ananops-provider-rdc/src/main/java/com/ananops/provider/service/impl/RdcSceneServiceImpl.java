@@ -39,6 +39,7 @@ import tk.mybatis.mapper.entity.Example;
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -307,5 +308,25 @@ public class RdcSceneServiceImpl extends BaseService<RdcScene> implements RdcSce
         }else{
             return alarmDeviceDto;
         }
+    }
+
+    @Override
+    public double computeRadio(RdcSceneDeviceWithCreator rdcSceneDeviceWithCreator) {
+        Long sceneId = rdcSceneDeviceWithCreator.getSceneId();
+        BigDecimal latTarget = rdcSceneDeviceWithCreator.getLatitude();
+        BigDecimal lngTarget = rdcSceneDeviceWithCreator.getLongitude();
+        RdcSceneDevice camera = rdcSceneDeviceMapper.getSceneCamera(sceneId);
+        BigDecimal latOrigin = camera.getLatitude();
+        BigDecimal lngOrigin = camera.getLongitude();
+        double res =  Math.acos(
+                Math.cos(latOrigin.doubleValue())*
+                Math.cos(latTarget.doubleValue())*
+                Math.cos(lngOrigin.doubleValue() - lngTarget.doubleValue())+
+                Math.sin(latOrigin.doubleValue())*
+                Math.sin(latTarget.doubleValue())
+                )*180/Math.PI;
+        if (lngTarget.doubleValue()<=3.0) {
+            return res;
+        } else return -res;
     }
 }

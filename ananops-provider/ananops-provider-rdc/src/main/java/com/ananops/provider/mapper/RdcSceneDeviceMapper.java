@@ -15,4 +15,6 @@ public interface RdcSceneDeviceMapper extends MyMapper<RdcSceneDevice> {
     Integer deleteBindedDevice(@Param(value = "sceneId") Long sceneId,@Param(value = "deviceId") Long deviceId);
 
     RdcSceneDeviceWithCreator getSceneDevice(@Param(value = "deviceId") String deviceId);
+
+    RdcSceneDevice getSceneCamera(@Param(value = "sceneId")Long sceneId);
 }

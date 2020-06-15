@@ -5,10 +5,7 @@ import com.ananops.core.support.IService;
 import com.ananops.provider.model.domain.RdcArrow;
 import com.ananops.provider.model.domain.RdcScene;
 import com.ananops.provider.model.domain.RdcSceneDevice;
-import com.ananops.provider.model.dto.AlarmDeviceDto;
-import com.ananops.provider.model.dto.DeviceDataDto;
-import com.ananops.provider.model.dto.RdcAddSceneDto;
-import com.ananops.provider.model.dto.RdcSceneDeviceQueryDto;
+import com.ananops.provider.model.dto.*;
 import com.ananops.provider.model.dto.oss.OptUploadFileReqDto;
 import com.ananops.provider.model.dto.oss.OptUploadFileRespDto;
 import com.ananops.provider.model.vo.RdcArrowVo;
@@ -41,4 +38,6 @@ public interface RdcSceneService extends IService<RdcScene> {
     List<RdcArrowVo> getRdcArrowsBySceneId(Long sceneId);
 
     AlarmDeviceDto getAlarmDevice(DeviceDataDto deviceDataDto);
+
+    double computeRadio(RdcSceneDeviceWithCreator rdcSceneDeviceWithCreator);
 }

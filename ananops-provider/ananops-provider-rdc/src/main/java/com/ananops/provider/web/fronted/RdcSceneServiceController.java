@@ -6,6 +6,7 @@ import com.ananops.provider.model.domain.RdcScene;
 import com.ananops.provider.model.domain.RdcSceneDevice;
 import com.ananops.provider.model.dto.RdcAddSceneDto;
 import com.ananops.provider.model.dto.RdcSceneDeviceQueryDto;
+import com.ananops.provider.model.dto.RdcSceneDeviceWithCreator;
 import com.ananops.provider.model.dto.oss.OptUploadFileReqDto;
 import com.ananops.provider.model.dto.oss.OptUploadFileRespDto;
 import com.ananops.provider.model.vo.RdcArrowVo;
@@ -112,4 +113,11 @@ public class RdcSceneServiceController extends BaseController {
     public Wrapper<List<RdcArrowVo>> getArrowBySceneId(@PathVariable Long sceneId){
         return WrapMapper.ok(rdcSceneService.getRdcArrowsBySceneId(sceneId));
     }
+
+    @PostMapping(value = "/computeRadio")
+    @ApiOperation(httpMethod = "POST",value = "根据两点的经纬度计算转向角")
+    public Wrapper<Double> computeRadio(@RequestBody RdcSceneDeviceWithCreator rdcSceneDeviceWithCreator) {
+        return WrapMapper.ok(rdcSceneService.computeRadio(rdcSceneDeviceWithCreator));
+    }
+
 }
