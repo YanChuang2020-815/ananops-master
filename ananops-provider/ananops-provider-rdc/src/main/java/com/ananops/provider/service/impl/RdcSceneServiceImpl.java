@@ -30,7 +30,10 @@ import com.ananops.provider.service.RdcSceneService;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.xiaoleilu.hutool.io.FileTypeUtil;
+import org.apache.rocketmq.client.producer.DefaultMQProducer;
+import org.apache.rocketmq.common.message.Message;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -66,6 +69,9 @@ public class RdcSceneServiceImpl extends BaseService<RdcScene> implements RdcSce
 
     @Resource
     RdcArrowMapper rdcArrowMapper;
+
+    @Resource
+    DefaultMQProducer defaultMQProducer;
 
     @Override
     public RdcScene saveRdcScene(LoginAuthDto loginAuthDto, RdcAddSceneDto rdcAddSceneDto){
@@ -325,8 +331,28 @@ public class RdcSceneServiceImpl extends BaseService<RdcScene> implements RdcSce
                 Math.sin(latOrigin.doubleValue())*
                 Math.sin(latTarget.doubleValue())
                 )*180/Math.PI;
-        if (lngTarget.doubleValue()<=3.0) {
-            return res;
-        } else return -res;
+        if (lngTarget.doubleValue()>3.0) {
+            res = -res;
+        }
+        AlarmDto alarmDto = new AlarmDto();
+        alarmDto.setAngle(res);
+        alarmDto.setDeviceId(rdcSceneDeviceWithCreator.getDeviceId());
+        alarmDto.setSceneId(sceneId);
+        this.alramPush(alarmDto);
+        return res;
+    }
+
+    /**
+     * 向rocketmq发送消息（报警设备转向角）
+     * @param alarmDto
+     */
+    private void alramPush(AlarmDto alarmDto) {
+        Message sendMsg = new Message("alarmToCamera",alarmDto.toString().getBytes());
+        try {
+            defaultMQProducer.send(sendMsg);
+        } catch (Exception e){
+            throw new BusinessException("向rocketmq发送消息异常");
+        }
+        System.out.println(alarmDto.toString());
     }
 }
