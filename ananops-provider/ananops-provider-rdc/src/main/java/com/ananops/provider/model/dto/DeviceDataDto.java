@@ -20,5 +20,7 @@ public class DeviceDataDto implements Serializable {
 
     private String name;
 
+    private String deviceType;
+
     private List<DeviceCurDataDto> data;
 }

@@ -180,7 +180,7 @@ public class DeviceServiceImpl extends BaseService<Device> implements DeviceServ
 
     @Override
     public void pushDeviceData(DeviceDataDto deviceDataDto) {
-        Message msg = new Message("deviceData", deviceDataDto.toString().getBytes());
+        Message msg = new Message("deviceData", JSONObject.toJSONString(deviceDataDto).getBytes());
         try {
             defaultMQProducer.send(msg);
         } catch (Exception e){
