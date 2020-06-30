@@ -25,4 +25,12 @@
     <result column="device_id" property="deviceId" jdbcType="VARCHAR" />
     <result column="group_id" property="groupId" jdbcType="BIGINT" />
   </resultMap>
+
+  <select id="getAllDeviceByUserAndScene" resultMap="BaseResultMap">
+    select device.*
+    from an_rdc_scene_device as rs,an_rdc_device as device
+    where rs.scene_id = #{sceneId}
+    and rs.device_id = device.id
+    and device.group_id = #{groupId}
+  </select>
 </mapper>

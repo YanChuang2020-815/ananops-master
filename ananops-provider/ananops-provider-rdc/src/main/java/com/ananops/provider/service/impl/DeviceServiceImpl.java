@@ -9,6 +9,7 @@ import com.ananops.provider.mapper.DeviceMapper;
 import com.ananops.provider.mapper.RdcSceneDeviceMapper;
 import com.ananops.provider.model.domain.Device;
 import com.ananops.provider.model.domain.RdcSceneDevice;
+import com.ananops.provider.model.dto.DeviceDataDto;
 import com.ananops.provider.model.dto.RdcAddDeviceDto;
 import com.ananops.provider.model.dto.attachment.OptAttachmentUpdateReqDto;
 import com.ananops.provider.model.dto.oss.ElementImgUrlDto;
@@ -17,6 +18,8 @@ import com.ananops.provider.model.service.UacGroupFeignApi;
 import com.ananops.provider.model.vo.RdcDeviceVo;
 import com.ananops.provider.service.DeviceService;
 import com.ananops.provider.service.OpcOssFeignApi;
+import org.apache.rocketmq.client.producer.DefaultMQProducer;
+import org.apache.rocketmq.common.message.Message;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
@@ -39,6 +42,9 @@ public class DeviceServiceImpl extends BaseService<Device> implements DeviceServ
 
     @Resource
     RdcSceneDeviceMapper rdcSceneDeviceMapper;
+
+    @Resource
+    DefaultMQProducer defaultMQProducer;
 
     public List<Device> getAllDevicesSelective(JSONObject json) {
         Device device = new Device();
@@ -151,6 +157,38 @@ public class DeviceServiceImpl extends BaseService<Device> implements DeviceServ
         return rdcDeviceVoList;
     }
 
+    @Override
+    public List<RdcDeviceVo> getAllDeviceByUserAndScene(LoginAuthDto user, Long sceneId) {
+        // 获取登录用户的组织Id
+        Long userGroupId = user.getGroupId();
+        Long groupId;
+        try{
+            // 根据组织Id查询公司Id
+            groupId = uacGroupFeignApi.getCompanyInfoById(userGroupId).getResult().getId();
+        }catch (Exception e){
+            throw new BusinessException(ErrorCodeEnum.UAC10015001);
+        }
+        List<Device> deviceList = deviceMapper.getAllDeviceByUserAndScene(groupId,sceneId);
+        List<RdcDeviceVo> rdcDeviceVoList = new ArrayList<>();
+        if(null!=deviceList&&deviceList.size()>0){
+            deviceList.forEach(device -> {
+                rdcDeviceVoList.add(transform(device));
+            });
+        }
+        return rdcDeviceVoList;
+    }
+
+    @Override
+    public void pushDeviceData(DeviceDataDto deviceDataDto) {
+        Message msg = new Message("deviceData", deviceDataDto.toString().getBytes());
+        try {
+            defaultMQProducer.send(msg);
+        } catch (Exception e){
+            throw new BusinessException("向rocketmq发送设备数据");
+        }
+        System.out.println(msg.toString());
+    }
+
     private RdcDeviceVo transform(Device device){
         RdcDeviceVo rdcDeviceVo = new RdcDeviceVo();
         BeanUtils.copyProperties(device,rdcDeviceVo);
@@ -177,4 +215,6 @@ public class DeviceServiceImpl extends BaseService<Device> implements DeviceServ
             throw new BusinessException(ErrorCodeEnum.GL99990100);
         }
     }
+
+
 }

@@ -3,6 +3,7 @@ package com.ananops.provider.web.fronted;
 import com.ananops.core.support.BaseController;
 import com.ananops.provider.model.domain.Device;
 import com.ananops.provider.model.domain.RdcScene;
+import com.ananops.provider.model.dto.DeviceDataDto;
 import com.ananops.provider.model.dto.RdcAddDeviceDto;
 import com.ananops.provider.model.dto.RdcAddSceneDto;
 import com.ananops.provider.model.vo.RdcDeviceVo;
@@ -46,6 +47,19 @@ public class RdcDeviceController extends BaseController {
     @ApiOperation(httpMethod = "DELETE", value = "删除设备")
     public Wrapper deleteDevice(@PathVariable Long deviceId){
         deviceService.deleteDevice(deviceId);
+        return WrapMapper.ok();
+    }
+
+    @GetMapping(value = "/getAllDeviceByUserAndScene/{sceneId}")
+    @ApiOperation(httpMethod = "GET", value = "查询当前用户组织下，指定场景下的全部的设备信息")
+    public Wrapper<List<RdcDeviceVo>> getAllDeviceByUserAndScene(@PathVariable("sceneId") Long sceneId) {
+        return WrapMapper.ok(deviceService.getAllDeviceByUserAndScene(getLoginAuthDto(),sceneId));
+    }
+
+    @PostMapping(value = "/pushDeviceData")
+    @ApiOperation(httpMethod = "POST",value = "发送设备数据")
+    public Wrapper pushDeviceData(@RequestBody DeviceDataDto deviceDataDto) {
+        deviceService.pushDeviceData(deviceDataDto);
         return WrapMapper.ok();
     }
 }
