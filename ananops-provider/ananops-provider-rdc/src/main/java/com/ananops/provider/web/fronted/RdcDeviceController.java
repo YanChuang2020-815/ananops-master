@@ -2,6 +2,7 @@ package com.ananops.provider.web.fronted;
 
 import com.ananops.core.support.BaseController;
 import com.ananops.provider.model.domain.Device;
+import com.ananops.provider.model.domain.RdcRule;
 import com.ananops.provider.model.domain.RdcScene;
 import com.ananops.provider.model.dto.DeviceDataDto;
 import com.ananops.provider.model.dto.RdcAddDeviceDto;
@@ -60,6 +61,13 @@ public class RdcDeviceController extends BaseController {
     @ApiOperation(httpMethod = "POST",value = "发送设备数据")
     public Wrapper pushDeviceData(@RequestBody DeviceDataDto deviceDataDto) {
         deviceService.pushDeviceData(deviceDataDto);
+        return WrapMapper.ok();
+    }
+
+    @PostMapping(value = "/deployRule")
+    @ApiOperation(httpMethod = "POST",value = "配置联动规则")
+    public Wrapper deployRule(@RequestBody RdcRule rdcRule) {
+        deviceService.deployRule(rdcRule);
         return WrapMapper.ok();
     }
 }

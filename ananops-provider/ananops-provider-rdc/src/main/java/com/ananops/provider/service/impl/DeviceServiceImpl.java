@@ -6,8 +6,10 @@ import com.ananops.base.enums.ErrorCodeEnum;
 import com.ananops.base.exception.BusinessException;
 import com.ananops.core.support.BaseService;
 import com.ananops.provider.mapper.DeviceMapper;
+import com.ananops.provider.mapper.RdcRuleMapper;
 import com.ananops.provider.mapper.RdcSceneDeviceMapper;
 import com.ananops.provider.model.domain.Device;
+import com.ananops.provider.model.domain.RdcRule;
 import com.ananops.provider.model.domain.RdcSceneDevice;
 import com.ananops.provider.model.dto.DeviceDataDto;
 import com.ananops.provider.model.dto.RdcAddDeviceDto;
@@ -45,6 +47,9 @@ public class DeviceServiceImpl extends BaseService<Device> implements DeviceServ
 
     @Resource
     DefaultMQProducer defaultMQProducer;
+
+    @Resource
+    RdcRuleMapper rdcRuleMapper;
 
     public List<Device> getAllDevicesSelective(JSONObject json) {
         Device device = new Device();
@@ -216,5 +221,16 @@ public class DeviceServiceImpl extends BaseService<Device> implements DeviceServ
         }
     }
 
+    @Override
+    public void deployRule(RdcRule rdcRule) {
+        rdcRuleMapper.insert(rdcRule);
+    }
 
+    @Override
+    public RdcRule getRule(Long deviceId) {
+        Example example = new Example(RdcRule.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("deviceAId",deviceId);
+        return rdcRuleMapper.selectByExample(example).get(0);
+    }
 }

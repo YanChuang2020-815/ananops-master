@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.ananops.base.dto.LoginAuthDto;
 import com.ananops.core.support.IService;
 import com.ananops.provider.model.domain.Device;
+import com.ananops.provider.model.domain.RdcRule;
 import com.ananops.provider.model.dto.DeviceDataDto;
 import com.ananops.provider.model.dto.RdcAddDeviceDto;
 import com.ananops.provider.model.vo.RdcDeviceVo;
@@ -29,4 +30,8 @@ public interface DeviceService extends IService<Device> {
     List<RdcDeviceVo> getAllDeviceByUserAndScene(LoginAuthDto user, Long sceneId);
 
     void pushDeviceData(DeviceDataDto deviceDataDto);
+
+    void deployRule(RdcRule rdcRule);
+
+    RdcRule getRule(Long deviceId);
 }
