@@ -30,3 +30,6 @@ rocketmq:
     maxMessageSize: 4096
     sendMsgTimeOut: 3000
     retryTimesWhenSendFailed: 2
+
+kubernetes:
+  master: 121.36.70.254:8080
