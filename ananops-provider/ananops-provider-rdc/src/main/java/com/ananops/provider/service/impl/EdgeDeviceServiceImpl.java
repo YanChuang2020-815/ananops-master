@@ -4,6 +4,9 @@ package com.ananops.provider.service.impl;
 import com.ananops.provider.model.device.DeviceList;
 import com.ananops.provider.model.device.DoneableDevice;
 import com.ananops.provider.model.device.EdgeDevice;
+import com.ananops.provider.model.deviceModel.DeviceModelList;
+import com.ananops.provider.model.deviceModel.DoneableDeviceModel;
+import com.ananops.provider.model.deviceModel.EdgeDeviceModel;
 import com.ananops.provider.service.EdgeDeviceService;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinition;
@@ -30,32 +33,15 @@ public class EdgeDeviceServiceImpl implements EdgeDeviceService {
     @Autowired
     private KubernetesClient k8sClient;
 
-    public static String DEVICE_CRD_GROUP = "devices.kubeedge.io";
-    public static String DEVICE_CRD_NAME = "devices." +  DEVICE_CRD_GROUP;
+    @Autowired
+    private NonNamespaceOperation<EdgeDevice, DeviceList, DoneableDevice, Resource<EdgeDevice, DoneableDevice>> deviceClient;
+
+    @Autowired
+    private NonNamespaceOperation<EdgeDeviceModel, DeviceModelList, DoneableDeviceModel, Resource<EdgeDeviceModel, DoneableDeviceModel>> deviceModelClient;
+
 
     @Override
     public void watchDeviceStatus(EdgeDevice edgeDevice) {
-        CustomResourceDefinitionList crds = k8sClient.customResourceDefinitions().list();
-        List<CustomResourceDefinition> crdsItems = crds.getItems();
-        System.out.println("Found " + crdsItems.size() + " CRD(s)");
-        CustomResourceDefinition deviceCRD = null;
-        for (CustomResourceDefinition crd : crdsItems) {
-            ObjectMeta metadata = crd.getMetadata();
-            if (metadata != null) {
-                String name = metadata.getName();
-                System.out.println("    " + name + " => " + metadata.getSelfLink());
-                if (DEVICE_CRD_NAME.equals(name)) {
-                    deviceCRD = crd;
-                }
-            }
-        }
-
-        NonNamespaceOperation<EdgeDevice, DeviceList, DoneableDevice, Resource<EdgeDevice, DoneableDevice>> deviceClient =
-                k8sClient.customResources(deviceCRD, EdgeDevice.class, DeviceList.class, DoneableDevice.class);
-
-//        EdgeDevice created = new EdgeDevice();
-//        ObjectMeta metadata = new ObjectMeta();
-//        metadata.setName();
         deviceClient.withResourceVersion(edgeDevice.getMetadata().getResourceVersion()).watch(new Watcher<EdgeDevice>() {
             @Override
             public void eventReceived(Action action, EdgeDevice resource) {
@@ -74,24 +60,31 @@ public class EdgeDeviceServiceImpl implements EdgeDeviceService {
 
     @Override
     public List<EdgeDevice> getAllDevice() {
-        CustomResourceDefinitionList crds = k8sClient.customResourceDefinitions().list();
-        List<CustomResourceDefinition> crdsItems = crds.getItems();
-        System.out.println("Found " + crdsItems.size() + " CRD(s)");
-        CustomResourceDefinition deviceCRD = null;
-        for (CustomResourceDefinition crd : crdsItems) {
-            ObjectMeta metadata = crd.getMetadata();
-            if (metadata != null) {
-                String name = metadata.getName();
-                System.out.println("    " + name + " => " + metadata.getSelfLink());
-                if (DEVICE_CRD_NAME.equals(name)) {
-                    deviceCRD = crd;
-                }
-            }
-        }
-        NonNamespaceOperation<EdgeDevice, DeviceList, DoneableDevice, Resource<EdgeDevice, DoneableDevice>> deviceClient =
-                k8sClient.customResources(deviceCRD, EdgeDevice.class, DeviceList.class, DoneableDevice.class);
         CustomResourceList<EdgeDevice> deviceList = deviceClient.list();
-        List<EdgeDevice> items = deviceList.getItems();
-        return items;
+        return deviceList.getItems();
+    }
+
+    @Override
+    public List<EdgeDeviceModel> getAllDeviceModel() {
+        CustomResourceList<EdgeDeviceModel> deviceModelList = deviceModelClient.list();
+        return deviceModelList.getItems();
+    }
+
+    @Override
+    public void createEdgeDeviceModel(EdgeDeviceModel edgeDeviceModel) {
+        try {
+            deviceModelClient.createOrReplace(edgeDeviceModel);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void createEdgeDevice(EdgeDevice edgeDevice) {
+        try {
+            deviceClient.createOrReplace(edgeDevice);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

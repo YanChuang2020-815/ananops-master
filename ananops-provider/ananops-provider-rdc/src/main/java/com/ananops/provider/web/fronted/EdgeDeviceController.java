@@ -2,7 +2,10 @@ package com.ananops.provider.web.fronted;
 
 
 import com.ananops.provider.model.device.EdgeDevice;
+import com.ananops.provider.model.deviceModel.EdgeDeviceModel;
 import com.ananops.provider.service.EdgeDeviceService;
+import com.ananops.wrapper.WrapMapper;
+import com.ananops.wrapper.Wrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.MediaType;
@@ -23,13 +26,33 @@ public class EdgeDeviceController {
 
     @GetMapping("getAllEdgeDevice")
     @ApiOperation( "获取全部设备")
-    public List<EdgeDevice> getAllDevice() {
-        return edgeDeviceService.getAllDevice();
+    public Wrapper<List<EdgeDevice>> getAllDevice() {
+        return WrapMapper.ok(edgeDeviceService.getAllDevice());
     }
 
     @PostMapping("watchEdgeDevice")
     @ApiOperation( "监听指定设备")
     public void watchDevice(@RequestBody EdgeDevice edgeDevice) {
         edgeDeviceService.watchDeviceStatus(edgeDevice);
+    }
+
+    @GetMapping("getAllEdgeDeviceModel")
+    @ApiOperation("获取全部设备模型")
+    public Wrapper<List<EdgeDeviceModel>> getAllEdgeDeviceModel() {
+        return WrapMapper.ok(edgeDeviceService.getAllDeviceModel());
+    }
+
+    @PostMapping("createEdgeDevice")
+    @ApiOperation("创建设备")
+    public Wrapper createEdgeDevice(@RequestBody EdgeDevice edgeDevice) {
+        edgeDeviceService.createEdgeDevice(edgeDevice);
+        return WrapMapper.ok();
+    }
+
+    @PostMapping("createEdgeDeviceModel")
+    @ApiOperation("创建设备模型")
+    public Wrapper createEdgeDeviceModel(@RequestBody EdgeDeviceModel edgeDeviceModel) {
+        edgeDeviceService.createEdgeDeviceModel(edgeDeviceModel);
+        return WrapMapper.ok();
     }
 }
