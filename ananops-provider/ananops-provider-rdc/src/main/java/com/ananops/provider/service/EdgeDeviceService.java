@@ -19,4 +19,8 @@ public interface EdgeDeviceService {
     void createEdgeDeviceModel(EdgeDeviceModel edgeDeviceModel);
 
     void createEdgeDevice(EdgeDevice edgeDevice);
+
+    void deleteEdgeDevice(EdgeDevice edgeDevice);
+
+    void deleteEdgeDeviceModel(EdgeDeviceModel edgeDeviceModel);
 }

@@ -89,4 +89,24 @@ public class EdgeDeviceServiceImpl implements EdgeDeviceService {
             throw new BusinessException("创建设备失败");
         }
     }
+
+    @Override
+    public void deleteEdgeDevice(EdgeDevice edgeDevice) {
+        try {
+            deviceClient.delete(edgeDevice);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BusinessException("设备删除失败");
+        }
+    }
+
+    @Override
+    public void deleteEdgeDeviceModel(EdgeDeviceModel edgeDeviceModel) {
+        try {
+            deviceModelClient.delete(edgeDeviceModel);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BusinessException("设备删除失败");
+        }
+    }
 }

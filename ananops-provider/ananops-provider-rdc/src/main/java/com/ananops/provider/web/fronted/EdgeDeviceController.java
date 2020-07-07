@@ -55,4 +55,18 @@ public class EdgeDeviceController {
         edgeDeviceService.createEdgeDeviceModel(edgeDeviceModel);
         return WrapMapper.ok();
     }
+
+    @PostMapping("deleteEdgeDevice")
+    @ApiOperation("删除设备")
+    public Wrapper deleteEdgeDevice(@RequestBody EdgeDevice edgeDevice) {
+        edgeDeviceService.deleteEdgeDevice(edgeDevice);
+        return WrapMapper.ok();
+    }
+
+    @PostMapping("deleteEdgeDeviceModel")
+    @ApiOperation("删除设备模型")
+    public Wrapper deleteEdgeDeviceModel(@RequestBody EdgeDeviceModel edgeDeviceModel) {
+        edgeDeviceService.deleteEdgeDeviceModel(edgeDeviceModel);
+        return WrapMapper.ok();
+    }
 }
