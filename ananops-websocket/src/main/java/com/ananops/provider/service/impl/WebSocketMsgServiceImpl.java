@@ -86,4 +86,19 @@ public class WebSocketMsgServiceImpl extends BaseService<WebsocketUserMessageInf
             messagingTemplate.convertAndSendToUser(String.valueOf(userId),"/queue/chat",webSocketMsgDto);
         }
     }
+
+    @Override
+    public void pushEdgeDeviceData(EdgeDeviceDataDto edgeDeviceDataDto){
+        logger.info("当前消息为：{}",edgeDeviceDataDto);
+        Long userId = edgeDeviceDataDto.getUserId();
+        if(null!=userId){
+            WebSocketMsgDto<EdgeDeviceDataDto> webSocketMsgDto = new WebSocketMsgDto<>();
+            webSocketMsgDto.setMessageId(super.generateId());
+            webSocketMsgDto.setContent(edgeDeviceDataDto);
+            webSocketMsgDto.setTag("device");
+            webSocketMsgDto.setTopic("edgeDevice");
+            logger.info("向用户：{}，发送消息：{}",userId,webSocketMsgDto);
+            messagingTemplate.convertAndSendToUser(String.valueOf(userId),"/queue/chat",webSocketMsgDto);
+        }
+    }
 }

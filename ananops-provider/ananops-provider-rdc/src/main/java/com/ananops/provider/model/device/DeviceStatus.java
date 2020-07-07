@@ -1,5 +1,6 @@
 package com.ananops.provider.model.device;
 
+import com.ananops.provider.model.dto.DeviceTwin;
 import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinitionStatus;
 import lombok.Data;
 

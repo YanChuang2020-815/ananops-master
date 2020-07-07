@@ -1,6 +1,7 @@
 package com.ananops.provider.service;
 
 import com.ananops.provider.model.dto.AlarmDeviceDto;
+import com.ananops.provider.model.dto.EdgeDeviceDataDto;
 import com.ananops.provider.model.dto.MsgDto;
 import com.ananops.provider.service.hystrix.WebSocketFeignHystrix;
 import com.ananops.security.feign.OAuth2FeignAutoConfiguration;
@@ -17,4 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface WebSocketFeignApi {
     @PostMapping(value = "/api/websocket/updateMsg")
     Wrapper pushMsg(@ApiParam(name = "getTaskByFacilitatorId",value = "根据服务商ID查询巡检任务")@RequestBody AlarmDeviceDto alarmDeviceDto);
+
+    @PostMapping(value = "/api/websocket/pushEdgeDeviceData")
+    Wrapper pushEdgeDeviceData(@RequestBody EdgeDeviceDataDto edgeDeviceDataDto);
 }

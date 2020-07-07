@@ -1,10 +1,7 @@
 package com.ananops.provider.web.rpc;
 
 import com.ananops.core.support.BaseController;
-import com.ananops.provider.model.dto.AlarmDeviceDto;
-import com.ananops.provider.model.dto.MsgDto;
-import com.ananops.provider.model.dto.TaskDto;
-import com.ananops.provider.model.dto.TaskQueryDto;
+import com.ananops.provider.model.dto.*;
 import com.ananops.provider.service.ImcTaskFeignApi;
 import com.ananops.provider.service.WebSocketFeignApi;
 import com.ananops.provider.service.WebSocketMsgService;
@@ -39,6 +36,13 @@ public class MsgPushController extends BaseController implements WebSocketFeignA
     public Wrapper pushMsg(@ApiParam(name = "getTaskByFacilitatorId",value = "根据服务商ID查询巡检任务")@RequestBody AlarmDeviceDto alarmDeviceDto){
         webSocketMsgService.test(alarmDeviceDto);
         return WrapMapper.ok();
-    };
+    }
+
+    @Override
+    @ApiOperation(httpMethod = "POST", value = "接收边缘设备数据")
+    public Wrapper pushEdgeDeviceData(@RequestBody EdgeDeviceDataDto edgeDeviceDataDto) {
+        webSocketMsgService.pushEdgeDeviceData(edgeDeviceDataDto);
+        return WrapMapper.ok();
+    }
 
 }

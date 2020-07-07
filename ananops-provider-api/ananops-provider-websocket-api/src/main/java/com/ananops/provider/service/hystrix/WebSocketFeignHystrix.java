@@ -1,6 +1,7 @@
 package com.ananops.provider.service.hystrix;
 
 import com.ananops.provider.model.dto.AlarmDeviceDto;
+import com.ananops.provider.model.dto.EdgeDeviceDataDto;
 import com.ananops.provider.model.dto.MsgDto;
 import com.ananops.provider.service.WebSocketFeignApi;
 import com.ananops.wrapper.Wrapper;
@@ -16,6 +17,11 @@ public class WebSocketFeignHystrix implements WebSocketFeignApi {
 
     @Override
     public Wrapper pushMsg(@ApiParam(name = "getTaskByFacilitatorId", value = "根据服务商ID查询巡检任务") @RequestBody AlarmDeviceDto alarmDeviceDto){
+        return null;
+    }
+
+    @Override
+    public Wrapper pushEdgeDeviceData(@RequestBody EdgeDeviceDataDto edgeDeviceDataDto) {
         return null;
     }
 }

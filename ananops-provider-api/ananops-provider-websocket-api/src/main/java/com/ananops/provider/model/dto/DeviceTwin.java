@@ -1,4 +1,4 @@
-package com.ananops.provider.model.device;
+package com.ananops.provider.model.dto;
 
 import lombok.Data;
 
