@@ -1,6 +1,7 @@
 package com.ananops.provider.service.impl;
 
 
+import com.ananops.base.exception.BusinessException;
 import com.ananops.provider.model.device.DeviceList;
 import com.ananops.provider.model.device.DoneableDevice;
 import com.ananops.provider.model.device.EdgeDevice;
@@ -75,7 +76,7 @@ public class EdgeDeviceServiceImpl implements EdgeDeviceService {
         try {
             deviceModelClient.createOrReplace(edgeDeviceModel);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new BusinessException("创建设备模型失败");
         }
     }
 
@@ -85,6 +86,7 @@ public class EdgeDeviceServiceImpl implements EdgeDeviceService {
             deviceClient.createOrReplace(edgeDevice);
         } catch (Exception e) {
             e.printStackTrace();
+            throw new BusinessException("创建设备失败");
         }
     }
 }
