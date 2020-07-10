@@ -40,4 +40,6 @@ public interface RdcSceneService extends IService<RdcScene> {
     AlarmDeviceDto getAlarmDevice(DeviceDataDto deviceDataDto);
 
     double computeRadio(RdcSceneDeviceWithCreator rdcSceneDeviceWithCreator);
+
+    void handleDeviceAlarm(String deviceId);
 }

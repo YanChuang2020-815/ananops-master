@@ -317,6 +317,12 @@ public class RdcSceneServiceImpl extends BaseService<RdcScene> implements RdcSce
     }
 
     @Override
+    public void handleDeviceAlarm(String deviceId) {
+        RdcSceneDeviceWithCreator device = rdcSceneDeviceMapper.getSceneDevice(deviceId);
+        this.computeRadio(device);
+    }
+
+    @Override
     public double computeRadio(RdcSceneDeviceWithCreator rdcSceneDeviceWithCreator) {
         Long sceneId = rdcSceneDeviceWithCreator.getSceneId();
         BigDecimal latTarget = rdcSceneDeviceWithCreator.getLatitude();
