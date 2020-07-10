@@ -15,4 +15,8 @@ public class EdgeDeviceDataDto implements Serializable {
     private Long userId;
 
     private List<DeviceTwin> deviceTwins;
+
+    private String action;
+
+    private String deviceName;
 }

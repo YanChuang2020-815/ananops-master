@@ -68,6 +68,8 @@ public class K8sDeviceConfig {
                 System.out.println("==> " + action + " for " + resource);
                 EdgeDeviceDataDto edgeDeviceDataDto = new EdgeDeviceDataDto();
                 edgeDeviceDataDto.setDeviceTwins(resource.getStatus().getTwins());
+                edgeDeviceDataDto.setAction(action.name());
+                edgeDeviceDataDto.setDeviceName(resource.getMetadata().getName());
                 edgeDeviceDataDto.setUserId(Long.parseLong("896330256212820992"));
                 webSocketFeignApi.pushEdgeDeviceData(edgeDeviceDataDto);
                 if (resource.getSpec() == null) {
