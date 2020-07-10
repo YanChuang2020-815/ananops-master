@@ -66,30 +66,6 @@ public class EdgeDeviceServiceImpl implements EdgeDeviceService {
     @Override
     public List<EdgeDevice> getAllDevice() {
         CustomResourceList<EdgeDevice> deviceList = deviceClient.list();
-        deviceList.getItems().forEach(edgeDevice ->
-                {
-                    if (!watchMap.containsKey(edgeDevice.getMetadata().getUid())) {
-                        Watch watch = deviceClient.withResourceVersion(edgeDevice.getMetadata().getResourceVersion()).watch(new Watcher<EdgeDevice>() {
-                            @Override
-                            public void eventReceived(Action action, EdgeDevice resource) {
-                                System.out.println("==> " + action + " for " + resource);
-                                EdgeDeviceDataDto edgeDeviceDataDto = new EdgeDeviceDataDto();
-                                edgeDeviceDataDto.setDeviceTwins(edgeDevice.getStatus().getTwins());
-                                edgeDeviceDataDto.setUserId(Long.parseLong("896330256212820992"));
-                                webSocketFeignApi.pushEdgeDeviceData(edgeDeviceDataDto);
-                                if (resource.getSpec() == null) {
-                                    log.error("No Spec for resource " + resource);
-                                }
-                            }
-
-                            @Override
-                            public void onClose(KubernetesClientException cause) {
-                            }
-                        });
-                        watchMap.put(edgeDevice.getMetadata().getUid(),watch);
-                    }
-                }
-        );
         return deviceList.getItems();
     }
 

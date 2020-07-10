@@ -8,14 +8,18 @@ import com.ananops.provider.model.device.EdgeDevice;
 import com.ananops.provider.model.deviceModel.DeviceModelList;
 import com.ananops.provider.model.deviceModel.DoneableDeviceModel;
 import com.ananops.provider.model.deviceModel.EdgeDeviceModel;
+import com.ananops.provider.model.dto.EdgeDeviceDataDto;
+import com.ananops.provider.service.WebSocketFeignApi;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinition;
 import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinitionList;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClientException;
+import io.fabric8.kubernetes.client.Watcher;
 import io.fabric8.kubernetes.client.dsl.NonNamespaceOperation;
 import io.fabric8.kubernetes.client.dsl.Resource;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,9 +31,13 @@ import java.util.List;
  */
 @Data
 @Configuration
+@Slf4j
 public class K8sDeviceConfig {
     @Autowired
     private KubernetesClient k8sClient;
+
+    @Autowired
+    private WebSocketFeignApi webSocketFeignApi;
 
     public static String DEVICE_CRD_GROUP = "devices.kubeedge.io";
     public static String DEVICE_CRD_NAME = "devices." +  DEVICE_CRD_GROUP;
@@ -52,8 +60,26 @@ public class K8sDeviceConfig {
                 }
             }
         }
+        NonNamespaceOperation<EdgeDevice, DeviceList, DoneableDevice, Resource<EdgeDevice, DoneableDevice>> deviceClient =
+                k8sClient.customResources(deviceCRD, EdgeDevice.class, DeviceList.class, DoneableDevice.class);
+        deviceClient.watch(new Watcher<EdgeDevice>() {
+            @Override
+            public void eventReceived(Action action, EdgeDevice resource) {
+                System.out.println("==> " + action + " for " + resource);
+                EdgeDeviceDataDto edgeDeviceDataDto = new EdgeDeviceDataDto();
+                edgeDeviceDataDto.setDeviceTwins(resource.getStatus().getTwins());
+                edgeDeviceDataDto.setUserId(Long.parseLong("896330256212820992"));
+                webSocketFeignApi.pushEdgeDeviceData(edgeDeviceDataDto);
+                if (resource.getSpec() == null) {
+                    log.error("No Spec for resource " + resource);
+                }
+            }
 
-        return k8sClient.customResources(deviceCRD, EdgeDevice.class, DeviceList.class, DoneableDevice.class);
+            @Override
+            public void onClose(KubernetesClientException cause) {
+            }
+        });
+        return deviceClient;
     }
 
     @Bean
