@@ -14,4 +14,6 @@ public class DeviceTwin implements Serializable {
     private String propertyName;
 
     private DeviceDesired desired;
+
+    private DeviceReported reported;
 }
