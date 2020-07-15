@@ -1,5 +1,6 @@
 package com.ananops.provider.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -15,5 +16,6 @@ public class DeviceTwin implements Serializable {
 
     private DeviceDesired desired;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private DeviceReported reported;
 }
