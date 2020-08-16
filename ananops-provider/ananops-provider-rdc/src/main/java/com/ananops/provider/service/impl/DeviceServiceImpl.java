@@ -320,4 +320,17 @@ public class DeviceServiceImpl extends BaseService<Device> implements DeviceServ
         criteria.andEqualTo("deviceAId",deviceId);
         return rdcRuleMapper.selectByExample(example).get(0);
     }
+
+    @Override
+    public void getDeviceData(String deviceName) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("deviceName",deviceName);
+        Message msg = new Message("getDeviceData", jsonObject.toJSONString().getBytes());
+        try {
+            defaultMQProducer.send(msg);
+        } catch (Exception e){
+            throw new BusinessException("向rocketmq发送请求设备数据");
+        }
+        System.out.println(msg.toString());
+    }
 }

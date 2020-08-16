@@ -37,4 +37,6 @@ public interface DeviceService extends IService<Device> {
     void deployRule(RdcRule rdcRule);
 
     RdcRule getRule(Long deviceId);
+
+    void getDeviceData(String deviceName);
 }

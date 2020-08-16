@@ -78,4 +78,11 @@ public class RdcDeviceController extends BaseController {
         deviceService.deployRule(rdcRule);
         return WrapMapper.ok();
     }
+
+    @PostMapping(value = "/getDeviceData/{deviceName}")
+    @ApiOperation(httpMethod = "POST",value = "获取设备最新数据")
+    public Wrapper getDeviceData(@PathVariable(name = "deviceName") String deviceName) {
+        deviceService.getDeviceData(deviceName);
+        return WrapMapper.ok();
+    }
 }
