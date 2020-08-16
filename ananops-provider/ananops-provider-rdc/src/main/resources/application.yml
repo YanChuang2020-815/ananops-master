@@ -18,7 +18,7 @@ rocketmq:
     isOnOff: on
     groupName: ananops-rdc-consumer
     namesrvAddr: 123.56.46.27:9876
-    topics: deviceData,*
+    topics: deviceData,*;edgeDeviceData,*
     consumeThreadMin: 5
     consumeThreadMax: 32
     consumeMessageBatchMaxSize: 1

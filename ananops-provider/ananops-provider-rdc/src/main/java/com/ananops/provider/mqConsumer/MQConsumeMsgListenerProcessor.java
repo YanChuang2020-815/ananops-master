@@ -6,6 +6,7 @@ package com.ananops.provider.mqConsumer;
 
 import com.alibaba.fastjson.JSON;
 import com.ananops.provider.model.dto.DeviceDataDto;
+import com.ananops.provider.model.dto.EdgeDeviceDataDto;
 import com.ananops.provider.model.dto.MsgDto;
 import com.ananops.provider.service.WebSocketFeignApi;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
@@ -48,9 +49,15 @@ public class MQConsumeMsgListenerProcessor implements MessageListenerConcurrentl
             String body = new String(messageExt.getBody(), "utf-8");
 
             //LOGGER.info("MQ消息topic={}, tags={}, 消息内容={}", topic,tags,body);
-            DeviceDataDto deviceDataDto = JSON.parseObject(body,DeviceDataDto.class);
-            LOGGER.info("deviceDataDto={}",deviceDataDto);
-            msgProcesser.msgProcess(deviceDataDto);
+            if (topic.equals("deviceData")) {
+                DeviceDataDto deviceDataDto = JSON.parseObject(body,DeviceDataDto.class);
+                LOGGER.info("deviceDataDto={}",deviceDataDto);
+                msgProcesser.msgProcess(deviceDataDto);
+            } else if (topic.equals("edgeDeviceData")) {
+                EdgeDeviceDataDto edgeDeviceDataDto = JSON.parseObject(body,EdgeDeviceDataDto.class);
+                LOGGER.info("edgeDeviceData is {}",edgeDeviceDataDto);
+            }
+
         } catch (Exception e) {
             LOGGER.error("获取MQ消息内容异常{}",e);
         }
