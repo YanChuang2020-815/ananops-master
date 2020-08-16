@@ -293,13 +293,15 @@ public class DeviceServiceImpl extends BaseService<Device> implements DeviceServ
     @Override
     public void deleteDevice(Long deviceId){
         try{
+            Device device = deviceMapper.selectByPrimaryKey(deviceId);
+            String uid = device.getDeviceId();
             deviceMapper.deleteByPrimaryKey(deviceId);
             Example example = new Example(RdcSceneDevice.class);
             Example.Criteria criteria = example.createCriteria();
             criteria.andEqualTo("deviceId",deviceId);
             rdcSceneDeviceMapper.deleteByExample(example);
-            if (redisTemplate.hasKey(String.valueOf(deviceId))) {
-                redisTemplate.delete(String.valueOf(deviceId));
+            if (redisTemplate.hasKey(uid)) {
+                redisTemplate.delete(uid);
             }
         }catch (Exception e){
             throw new BusinessException(ErrorCodeEnum.GL99990100);

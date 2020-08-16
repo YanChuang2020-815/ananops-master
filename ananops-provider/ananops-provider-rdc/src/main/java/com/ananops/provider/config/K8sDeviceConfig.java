@@ -78,6 +78,7 @@ public class K8sDeviceConfig {
                 String deviceId = redisTemplate.opsForValue().get(resource.getMetadata().getUid());
                 if (deviceId != null) {
                     //向设备发送报警信息
+                    deviceId = deviceId.substring(1,deviceId.length()-1);
                     rdcSceneService.handleEdgeDeviceAlarm(Long.valueOf(deviceId),resource);
                 }
 //                EdgeDeviceDataDto edgeDeviceDataDto = new EdgeDeviceDataDto();
