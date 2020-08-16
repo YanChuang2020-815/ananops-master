@@ -5,9 +5,7 @@ package com.ananops.provider.mqConsumer;
  */
 
 import com.alibaba.fastjson.JSON;
-import com.ananops.provider.model.dto.DeviceDataDto;
-import com.ananops.provider.model.dto.EdgeDeviceDataDto;
-import com.ananops.provider.model.dto.MsgDto;
+import com.ananops.provider.model.dto.*;
 import com.ananops.provider.service.WebSocketFeignApi;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
@@ -19,6 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -27,6 +26,9 @@ public class MQConsumeMsgListenerProcessor implements MessageListenerConcurrentl
 
     @Resource
     MsgProcesser msgProcesser;
+
+    @Resource
+    WebSocketFeignApi webSocketFeignApi;
 
     /**
      * 默认msg里只有一条消息，可以通过设置consumeMessageBatchMaxSize参数来批量接收消息
@@ -54,8 +56,24 @@ public class MQConsumeMsgListenerProcessor implements MessageListenerConcurrentl
                 LOGGER.info("deviceDataDto={}",deviceDataDto);
                 msgProcesser.msgProcess(deviceDataDto);
             } else if (topic.equals("edgeDeviceData")) {
-                EdgeDeviceDataDto edgeDeviceDataDto = JSON.parseObject(body,EdgeDeviceDataDto.class);
-                LOGGER.info("edgeDeviceData is {}",edgeDeviceDataDto);
+                EdgeCurDataDto edgeCurDataDto = JSON.parseObject(body,EdgeCurDataDto.class);
+                LOGGER.info("edgeCurDataDto is {}",edgeCurDataDto);
+                EdgeDeviceDataDto edgeDeviceDataDto = new EdgeDeviceDataDto();
+                edgeDeviceDataDto.setDeviceName(edgeCurDataDto.getDeviceName());
+                edgeDeviceDataDto.setAction("CHECK");
+                String userId = "896330256212820992";
+                edgeDeviceDataDto.setUserId(Long.valueOf(userId));
+                List<DeviceTwin> deviceTwins = new ArrayList<>();
+                for (SingleDataDto dataDto : edgeCurDataDto.getDataList()) {
+                    DeviceTwin deviceTwin = new DeviceTwin();
+                    deviceTwin.setPropertyName(dataDto.getName());
+                    DeviceReported deviceReported = new DeviceReported();
+                    deviceReported.setValue(dataDto.getValue());
+                    deviceTwin.setReported(deviceReported);
+                    deviceTwins.add(deviceTwin);
+                }
+                edgeDeviceDataDto.setDeviceTwins(deviceTwins);
+                webSocketFeignApi.pushEdgeDeviceData(edgeDeviceDataDto);
             }
 
         } catch (Exception e) {

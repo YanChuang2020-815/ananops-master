@@ -9,7 +9,7 @@ import java.util.List;
  * Created by rongshuai on 2020/8/16 20:04
  */
 @Data
-public class EdgeDeviceDataDto implements Serializable {
+public class EdgeCurDataDto implements Serializable {
     private static final long serialVersionUID = 5494005092909311940L;
 
     private String deviceName;
