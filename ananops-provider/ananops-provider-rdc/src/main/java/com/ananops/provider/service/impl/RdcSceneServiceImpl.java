@@ -10,6 +10,7 @@ import com.ananops.provider.mapper.DeviceMapper;
 import com.ananops.provider.mapper.RdcArrowMapper;
 import com.ananops.provider.mapper.RdcSceneDeviceMapper;
 import com.ananops.provider.mapper.RdcSceneMapper;
+import com.ananops.provider.model.device.EdgeDevice;
 import com.ananops.provider.model.domain.Device;
 import com.ananops.provider.model.domain.RdcArrow;
 import com.ananops.provider.model.domain.RdcScene;
@@ -27,6 +28,7 @@ import com.ananops.provider.model.vo.RdcBindedDeviceVo;
 import com.ananops.provider.model.vo.RdcSceneVo;
 import com.ananops.provider.service.OpcOssFeignApi;
 import com.ananops.provider.service.RdcSceneService;
+import com.ananops.provider.service.WebSocketFeignApi;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.xiaoleilu.hutool.io.FileTypeUtil;
@@ -72,6 +74,9 @@ public class RdcSceneServiceImpl extends BaseService<RdcScene> implements RdcSce
 
     @Resource
     DefaultMQProducer defaultMQProducer;
+
+    @Resource
+    WebSocketFeignApi webSocketFeignApi;
 
     @Override
     public RdcScene saveRdcScene(LoginAuthDto loginAuthDto, RdcAddSceneDto rdcAddSceneDto){
@@ -321,6 +326,22 @@ public class RdcSceneServiceImpl extends BaseService<RdcScene> implements RdcSce
         RdcSceneDeviceWithCreator device = rdcSceneDeviceMapper.getSceneDevice(deviceId);
         if (device!=null) {
             this.computeRadio(device);
+        }
+    }
+
+    @Override
+    public void handleEdgeDeviceAlarm(Long id, EdgeDevice edgeDevice) {
+        RdcSceneDeviceWithCreator device = rdcSceneDeviceMapper.getSceneEdgeDevice(id);
+        if (device!=null) {
+            this.computeRadio(device);
+            AlarmDeviceDto alarmDeviceDto = new AlarmDeviceDto();
+            BeanUtils.copyProperties(device,alarmDeviceDto);
+            alarmDeviceDto.setDeviceName(edgeDevice.getMetadata().getName());
+            if(edgeDevice.getStatus().getTwins()!=null&&edgeDevice.getStatus().getTwins().size()>0){
+                alarmDeviceDto.setValue(Double.valueOf(edgeDevice.getStatus().getTwins().get(0).getReported().getValue()));
+            }
+            logger.info("边缘设备推送数据{}",alarmDeviceDto);
+            webSocketFeignApi.pushMsg(alarmDeviceDto);
         }
     }
 

@@ -2,6 +2,7 @@ package com.ananops.provider.service;
 
 import com.ananops.base.dto.LoginAuthDto;
 import com.ananops.core.support.IService;
+import com.ananops.provider.model.device.EdgeDevice;
 import com.ananops.provider.model.domain.RdcArrow;
 import com.ananops.provider.model.domain.RdcScene;
 import com.ananops.provider.model.domain.RdcSceneDevice;
@@ -42,4 +43,6 @@ public interface RdcSceneService extends IService<RdcScene> {
     double computeRadio(RdcSceneDeviceWithCreator rdcSceneDeviceWithCreator);
 
     void handleDeviceAlarm(String deviceId);
+
+    void handleEdgeDeviceAlarm(Long id, EdgeDevice edgeDevice);
 }

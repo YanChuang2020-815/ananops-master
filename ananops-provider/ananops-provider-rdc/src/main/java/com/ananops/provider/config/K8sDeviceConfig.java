@@ -8,7 +8,9 @@ import com.ananops.provider.model.device.EdgeDevice;
 import com.ananops.provider.model.deviceModel.DeviceModelList;
 import com.ananops.provider.model.deviceModel.DoneableDeviceModel;
 import com.ananops.provider.model.deviceModel.EdgeDeviceModel;
+import com.ananops.provider.model.dto.DeviceDataDto;
 import com.ananops.provider.model.dto.EdgeDeviceDataDto;
+import com.ananops.provider.service.RdcSceneService;
 import com.ananops.provider.service.WebSocketFeignApi;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinition;
@@ -23,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.List;
 
@@ -38,6 +41,12 @@ public class K8sDeviceConfig {
 
     @Autowired
     private WebSocketFeignApi webSocketFeignApi;
+
+    @Autowired
+    private RedisTemplate<String, String> redisTemplate;
+
+    @Autowired
+    private RdcSceneService rdcSceneService;
 
     public static String DEVICE_CRD_GROUP = "devices.kubeedge.io";
     public static String DEVICE_CRD_NAME = "devices." +  DEVICE_CRD_GROUP;
@@ -66,12 +75,17 @@ public class K8sDeviceConfig {
             @Override
             public void eventReceived(Action action, EdgeDevice resource) {
                 System.out.println("==> " + action + " for " + resource);
-                EdgeDeviceDataDto edgeDeviceDataDto = new EdgeDeviceDataDto();
-                edgeDeviceDataDto.setDeviceTwins(resource.getStatus().getTwins());
-                edgeDeviceDataDto.setAction(action.name());
-                edgeDeviceDataDto.setDeviceName(resource.getMetadata().getName());
-                edgeDeviceDataDto.setUserId(Long.parseLong("896330256212820992"));
-                webSocketFeignApi.pushEdgeDeviceData(edgeDeviceDataDto);
+                String deviceId = redisTemplate.opsForValue().get(resource.getMetadata().getUid());
+                if (deviceId != null) {
+                    //向设备发送报警信息
+                    rdcSceneService.handleEdgeDeviceAlarm(Long.valueOf(deviceId),resource);
+                }
+//                EdgeDeviceDataDto edgeDeviceDataDto = new EdgeDeviceDataDto();
+//                edgeDeviceDataDto.setDeviceTwins(resource.getStatus().getTwins());
+//                edgeDeviceDataDto.setAction(action.name());
+//                edgeDeviceDataDto.setDeviceName(resource.getMetadata().getName());
+//                edgeDeviceDataDto.setUserId(Long.parseLong("896330256212820992"));
+//                webSocketFeignApi.pushEdgeDeviceData(edgeDeviceDataDto);
                 if (resource.getSpec() == null) {
                     log.error("No Spec for resource " + resource);
                 }

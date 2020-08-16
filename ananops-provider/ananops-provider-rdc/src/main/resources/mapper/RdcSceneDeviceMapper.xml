@@ -40,6 +40,14 @@
         AND device.id = rs.device_id
     </select>
 
+    <select id="getSceneEdgeDevice" resultMap="DeviceResultMap">
+        SELECT device.creator_id,rs.scene_id,rs.device_id,rs.longitude,rs.latitude
+        FROM an_rdc_scene_device as rs,an_rdc_device as device
+        WHERE 1=1
+        AND device.id = #{id}
+        AND device.id = rs.device_id
+    </select>
+
     <!--查询当前场景中的摄像机-->
     <select id="getSceneCamera" resultMap="BaseResultMap">
         select sd.scene_id,sd.device_id,sd.longitude,sd.latitude

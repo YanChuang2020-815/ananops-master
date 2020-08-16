@@ -6,6 +6,7 @@ import com.ananops.provider.model.domain.RdcRule;
 import com.ananops.provider.model.domain.RdcScene;
 import com.ananops.provider.model.dto.DeviceDataDto;
 import com.ananops.provider.model.dto.RdcAddDeviceDto;
+import com.ananops.provider.model.dto.RdcAddEdgeDeviceDto;
 import com.ananops.provider.model.dto.RdcAddSceneDto;
 import com.ananops.provider.model.vo.RdcDeviceVo;
 import com.ananops.provider.model.vo.RdcSceneVo;
@@ -36,6 +37,13 @@ public class RdcDeviceController extends BaseController {
     public Wrapper<Device> saveRdcDevice(@ApiParam(name = "saveRdcDevice",value = "编辑设备")@RequestBody RdcAddDeviceDto rdcAddDeviceDto){
         logger.info("rdcAddDeviceDto={}",rdcAddDeviceDto);
         return WrapMapper.ok(deviceService.createDevice(getLoginAuthDto(),rdcAddDeviceDto));
+    }
+
+    @PostMapping(value = "/saveEdgeDevice")
+    @ApiOperation(httpMethod = "POST",value = "新添加边缘设备")
+    public Wrapper<Device> saveRdcEdgeDevice(@ApiParam(name = "saveRdcEdgeDevice",value = "编辑设备")@RequestBody RdcAddEdgeDeviceDto rdcAddEdgeDeviceDto){
+        logger.info("rdcAddEdgeDeviceDto={}",rdcAddEdgeDeviceDto);
+        return WrapMapper.ok(deviceService.createEdgeDevice(getLoginAuthDto(),rdcAddEdgeDeviceDto));
     }
 
     @GetMapping(value = "/getAllDevice")

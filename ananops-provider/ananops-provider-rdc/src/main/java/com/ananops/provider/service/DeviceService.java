@@ -7,6 +7,7 @@ import com.ananops.provider.model.domain.Device;
 import com.ananops.provider.model.domain.RdcRule;
 import com.ananops.provider.model.dto.DeviceDataDto;
 import com.ananops.provider.model.dto.RdcAddDeviceDto;
+import com.ananops.provider.model.dto.RdcAddEdgeDeviceDto;
 import com.ananops.provider.model.vo.RdcDeviceVo;
 
 import java.util.List;
@@ -22,6 +23,8 @@ public interface DeviceService extends IService<Device> {
     int updateDevice(JSONObject json);
 
     Device createDevice(LoginAuthDto loginAuthDto, RdcAddDeviceDto rdcAddDeviceDto);
+
+    Device createEdgeDevice(LoginAuthDto loginAuthDto, RdcAddEdgeDeviceDto rdcAddEdgeDeviceDto);
 
     List<RdcDeviceVo> getAllDevice(LoginAuthDto loginAuthDto);
 
